@@ -22,11 +22,10 @@ class BaseAgent:
         self.preference = preference
         self.model = model
 
-
         self.norms = self.initialise_norms()
         self.path = self.initialise_painting_sequence()
-        self.current_room = self.model.rooms[0]
-        self.current_art = self.model.rooms[0].art[0]
+        self.current_room = self.model.museum.start_room()
+        self.current_art = self.model.museum.start_painting()
         self.details = details
 
     def timestep(self):
@@ -40,8 +39,9 @@ class BaseAgent:
         else:
             self.flow_timestep()
         if self.details:
-            print("Agent " + str(self.id) + " currently in room ")
-            print(self.current_room.name + " looking at painting " + str(self.current_art))
+            print("Agent " + str(self.id) + " currently in room " +
+                  self.current_room.name + " looking at painting " +
+                  str(self.current_art))
 
 
     def initialise_painting_sequence(self):
@@ -62,7 +62,7 @@ class BaseAgent:
         pass
 
     def wandering_timestep(self):
-        self.current_room = random.choice(self.model.rooms)
+        self.current_room = random.choice(self.model.museum.rooms)
         self.current_art = random.choice(self.current_room.art)
 
     def flow_timestep(self):
@@ -70,6 +70,7 @@ class BaseAgent:
         if new_art != -1:
             self.current_art = new_art
         else:
-            self.current_room = random.choice(self.current_room.next)
-            self.current_art = self.current_room.art[0]
+            if len(self.current_room.next)>0:
+                self.current_room = random.choice(self.current_room.next)
+                self.current_art = self.current_room.art[0]
 

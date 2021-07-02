@@ -10,16 +10,15 @@ TODO
     1 - Fix up the museum class for usability
     2 - fix up agent list
 """
-import agentpy as ap
 from agents.base_agent import BaseAgent
 from environments.art_museum import *
 from agents.agent_list import AgentList
+from environments.exit import Exit
 
 class BaseModel:
-    def __init__(self, rooms,n_agents=5):
-        self.rooms = rooms
+    def __init__(self, museum, n_agents=5):
+        self.museum = museum
         self.agents = self.create_agent_list(n_agents)
-        self.remaining = 50
 
     def create_agent_list(self, n_agents):
         agent_list = AgentList()
@@ -37,13 +36,30 @@ class BaseModel:
         """ Record a dynamic variable. """
         self.agents.record('my_attribute')
 
+    def run(self, range=50):
+        while range > 0:
+            self.step()
+            range -= 1
+
 
 
 ArtMuseum = Museum()
 room1 = Room("lobby", [1,2,3], "modern")
 room2 = Room("gallery", [4,5,6], "classic")
 room3 = Room("end", [7,8,9], "funky")
+room1.add_next_room(room2)
+room2.add_next_room(room3)
+room2.add_prev_room(room1)
+room3.add_prev_room(room2)
+exit = Exit()
+room3.add_next_room(exit)
+exit.add_prev_room(room3)
 
+ArtMuseum.add_room(room1)
+ArtMuseum.add_room(room2)
+ArtMuseum.add_room(room3)
+ArtMuseum.add_room(exit)
 
-modle = BaseModel([room1, room2, room3])
-modle.step()
+modle = BaseModel(ArtMuseum)
+modle.run()
+print(modle.agents.get_agent_norms())
