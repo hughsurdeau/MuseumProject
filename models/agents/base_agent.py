@@ -17,7 +17,7 @@ import random
 
 class BaseAgent:
 
-    def __init__(self, id, preference, model, details=True):
+    def __init__(self, id, preference, model, details=False):
         self.id = id
         self.preference = preference
         self.model = model

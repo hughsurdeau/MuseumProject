@@ -6,9 +6,7 @@ What do I want to record:
     2 - Number of agents at each painting?
     3 - Number of agents conforming to each behavioural standard?
 
-TODO
-    1 - Fix up the museum class for usability
-    2 - fix up agent list
+
 """
 from agents.base_agent import BaseAgent
 from environments.art_museum import *
@@ -19,6 +17,7 @@ class BaseModel:
     def __init__(self, museum, n_agents=5):
         self.museum = museum
         self.agents = self.create_agent_list(n_agents)
+        self.data = []
 
     def create_agent_list(self, n_agents):
         agent_list = AgentList()
@@ -32,14 +31,17 @@ class BaseModel:
         """Call a method for every agent."""
         self.agents.timestep()
 
-    def update(self):
+    def update(self, time):
         """ Record a dynamic variable. """
-        self.agents.record('my_attribute')
+        norm_data = self.agents.get_agent_norms()
+        self.data.append((time, norm_data['flow'], norm_data['wander']))
 
     def run(self, range=50):
-        while range > 0:
+        count = 0
+        while count < range:
+            self.update(count)
             self.step()
-            range -= 1
+            count += 1
 
 
 
@@ -62,4 +64,4 @@ ArtMuseum.add_room(exit)
 
 modle = BaseModel(ArtMuseum)
 modle.run()
-print(modle.agents.get_agent_norms())
+print(modle.data)
