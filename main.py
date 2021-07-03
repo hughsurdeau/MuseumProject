@@ -1,12 +1,10 @@
 """
 Main TODO:
-    0 - Try and see if its possible to implement in agentpy
-    1 - Add wanderer behaviour
-    2 - Add end conditions.
-    3 - Get these things squared with the params
     3 - Begin introducing dynamics. These include:
         Decision on which norm to follow
         Decision points on how long to stay at each station
         Ability to skip based on subsequent nodes
 
+    Improvements to consider - make the rooms something other than a list. Can instead have a linked list or node with
+    the rooms being the secondary thing for cleanliness (i.e. each art piece is a node with its room as an attribute)
 """

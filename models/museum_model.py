@@ -29,24 +29,15 @@ class MuseumModel(ap.Model):
 
         self.network.add_agents(self.agents, self.network.nodes)
 
-        # Infect a random share of the population
-        I0 = int(self.p.initial_infection_share * self.p.population)
-        self.agents.random(I0).condition = 1
-
     def update(self):
-        """ Record variables after setup and each step. """
-        pass
+        """ Record variables after setup and each step.
+        TODO: Add recording for the room/artwork
         """
-        # Record share of agents with each condition
-        for i, c in enumerate(('S', 'I', 'R')):
-            n_agents = len(self.agents.select(self.agents.condition == i))
-            self[c] = n_agents / self.p.population
-            self.record(c)
 
-        # Stop simulation if disease is gone
-        if self.I == 0:
-            self.stop()
-        """
+        self.record("wanderers", len(self.agents.select(self.agents.norm == 1)))
+        self.record("lobby", len(self.agents.select(self.agents.current_room == 1)))
+        self.record("gallery", len(self.agents.select(self.agents.current_room == 2)))
+        self.record("exit", len(self.agents.select(self.agents.current_room == 3)))
 
     def get_next_painting(self, room, painting):
         """
@@ -79,17 +70,11 @@ class MuseumModel(ap.Model):
         """ Record evaluation measures at the end of the simulation. """
 
         # Record final evaluation measures
-        #self.report('Total share infected', self.I + self.R)
-        #self.report('Peak share infected', max(self.log['I']))
         pass
 
 parameters = {
     'population': 10,
-    'infection_chance': 0.3,
-    'recovery_chance': 0.1,
-    'initial_infection_share': 0.1,
-    'number_of_neighbors': 2,
-    'network_randomness': 0.5
+    'steps' : 100,
 }
 
 model = MuseumModel(parameters)
