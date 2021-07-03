@@ -23,7 +23,7 @@ class MuseumModel(ap.Model):
         self.start_room = 1
 
         # Create agents and network
-        self.agents = ap.AgentList(self, self.p.population, Person)
+        self.agents = ap.AgentList(self, self.p.population, MuseumGuest)
 
         self.network = self.agents.network = ap.Network(self, museum_graph)
 
@@ -38,6 +38,10 @@ class MuseumModel(ap.Model):
         self.record("lobby", len(self.agents.select(self.agents.current_room == 1)))
         self.record("gallery", len(self.agents.select(self.agents.current_room == 2)))
         self.record("exit", len(self.agents.select(self.agents.current_room == 3)))
+
+    def room_mean_norm(self, room):
+        """Get the mean norm (i.e. wanderer or flow) for a given room"""
+        pass
 
     def get_next_painting(self, room, painting):
         """
