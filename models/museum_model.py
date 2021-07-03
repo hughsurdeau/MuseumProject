@@ -20,13 +20,12 @@ class MuseumModel(ap.Model):
         """ Initialize the agents and network of the model. """
 
         self.start_painting = museum_graph.nodes[1]['art'][0]
-        print(museum_graph.nodes[1]['art'].index(self.start_painting))
+        self.start_room = 1
 
         # Create agents and network
         self.agents = ap.AgentList(self, self.p.population, Person)
 
         self.network = self.agents.network = ap.Network(self, museum_graph)
-        print(self.start_painting)
 
         self.network.add_agents(self.agents, self.network.nodes)
 
@@ -56,20 +55,25 @@ class MuseumModel(ap.Model):
         :param painting:
         :return:
         """
-        index = room['art'].index(painting)
-        if index == (len(room['art']) - 1):
-            room = room.next
-            painting = room['art'][0]
+        index = museum_graph.nodes[room]['art'].index(painting)
+        if index == (len(museum_graph.nodes[room]['art']) - 1):
+            if not museum_graph.successors(self.start_room): return (room, painting)
+            room = random.choice(list(museum_graph.successors(self.start_room)))
+            painting = museum_graph.nodes[room]['art'][0]
         else:
-            painting = room['art'][index+1]
+            painting = museum_graph.nodes[room]['art'][index+1]
+        return (room, painting)
+
+    def get_random_painting(self):
+        room = random.choice(list(museum_graph.nodes))
+        painting = random.choice(museum_graph.nodes[room]['art'])
         return (room, painting)
 
     def step(self):
         """ Define the models' events per simulation step. """
 
-        # Call 'being_sick' for infected agents
-        #self.agents.select(self.agents.condition == 1).being_sick()
-        pass
+        # Call move for each agent
+        self.agents.move()
 
     def end(self):
         """ Record evaluation measures at the end of the simulation. """
@@ -80,7 +84,7 @@ class MuseumModel(ap.Model):
         pass
 
 parameters = {
-    'population': 1000,
+    'population': 10,
     'infection_chance': 0.3,
     'recovery_chance': 0.1,
     'initial_infection_share': 0.1,
