@@ -8,10 +8,10 @@ What do I want to record:
 
 
 """
-from agents.base_agent import BaseAgent
-from environments.art_museum import *
-from agents.agent_list import AgentList
-from environments.exit import Exit
+from models.agents.Old.base_agent import BaseAgent
+from models.environments.Old.art_museum import *
+from models.agents.Old.agent_list import AgentList
+from models.environments.Old.exit import Exit
 
 class BaseModel:
     def __init__(self, museum, n_agents=5):

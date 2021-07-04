@@ -1,10 +1,9 @@
 """
 Represent museum as a graph with each node having a graph itself
 """
-import agentpy as ap
 import networkx as nx
-import random
-from attendee import *
+import statistics
+from models.agents.attendee import *
 
 museum_graph = nx.DiGraph()
 museum_graph.add_node(1, art=(0, 1, 2))
@@ -41,7 +40,10 @@ class MuseumModel(ap.Model):
 
     def room_mean_norm(self, room):
         """Get the mean norm (i.e. wanderer or flow) for a given room"""
-        pass
+        agent_norms = self.agents.select(self.agents.current_room == room).norm
+        return statistics.mean(agent_norms)
+
+
 
     def get_next_painting(self, room, painting):
         """
@@ -83,4 +85,4 @@ parameters = {
 
 model = MuseumModel(parameters)
 results = model.run()
-print(results)
+print(results.variables.MuseumModel.head())

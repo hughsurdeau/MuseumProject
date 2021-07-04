@@ -18,6 +18,10 @@ class MuseumGuest(ap.Agent):
         a bit more of a spectrum.
         :return:
         """
+        mean_room_norm = self.model.room_mean_norm(self.current_room)
+        seed = random.uniform(0, 1)
+        self.norm = 1 if seed < mean_room_norm else 0
+
 
     def move(self):
         print("Moving ")
@@ -25,6 +29,7 @@ class MuseumGuest(ap.Agent):
             self.current_room, self.current_painting = self.linear_move()
         else:
             self.current_room, self.current_painting = self.wander_move()
+        self.update_norms()
 
     def wander_move(self):
         return self.model.get_random_painting()
