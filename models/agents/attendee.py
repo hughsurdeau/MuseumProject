@@ -1,3 +1,4 @@
+from __future__ import annotations
 import agentpy as ap
 import random
 
@@ -19,20 +20,32 @@ class MuseumGuest(ap.Agent):
 
         Possible extensions - an intermediary or have the linearity be
         a bit more of a spectrum.
-        :return:
         """
         if self.current_room != "exit":
             mean_room_norm = self.model.room_mean_norm(self.current_room)
             seed = random.uniform(0, 1)
             self.norm = int(seed < mean_room_norm)
 
-    def check_if_bored(self):
+    def check_if_bored(self) -> bool:
+        """
+        Checks if the agent is bored of the current painting
+
+        :return: bool
+        """
         return random.uniform(0, 1) < self.boredom_threshold
 
-    def check_if_wants_to_leave(self):
+    def check_if_wants_to_leave(self) -> bool:
+        """
+        Check if the wandering agents wants to leave the museum
+
+        :return: bool
+        """
         return random.uniform(0, 1) > self.desire_to_leave
 
     def move(self):
+        """
+        Updates the agent's location
+        """
         if self.check_if_bored():
             if self.norm == 0:
                 self.current_room, self.current_painting = self.linear_move()
@@ -40,17 +53,26 @@ class MuseumGuest(ap.Agent):
                 self.current_room, self.current_painting = self.wander_move()
         self.update_norms()
 
-    def wander_move(self):
+    def wander_move(self) -> tuple[str, int]:
+        """
+        Updates the agent's location
+        :return: tuple
+            A tuple of the agent's new (room, painting)
+        """
         if self.check_if_wants_to_leave():
             self.norm = 0
             return self.model.get_last_painting()
         room, painting = self.model.get_random_painting()
-        i = 0
         while self.model.get_number_of_painting_viewers(painting) > self.crowd_threshold:
             room, painting = self.model.get_random_painting()
         return (room, painting)
 
-    def linear_move(self):
+    def linear_move(self) -> tuple[str, int]:
+        """
+        Updates the agent's location
+        :return: tuple
+            A tuple of the agent's new (room, painting)
+        """
         room, painting = self.model.get_next_painting(self.current_room, self.current_painting)
         while self.model.get_number_of_painting_viewers(painting) > self.crowd_threshold:
             if painting == self.model.last_painting: return (room, painting)
