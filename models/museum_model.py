@@ -12,6 +12,7 @@ class MuseumModel(ap.Model):
 
         self.start_painting = 0
         self.start_room = self.get_room(self.start_painting)
+        self.last_painting = 9 #TODO replace with actual method to get last painting
 
         # Create agents and network
         self.agents = ap.AgentList(self, self.p.population, MuseumGuest)
@@ -37,7 +38,12 @@ class MuseumModel(ap.Model):
         agent_norms = self.agents.select(self.agents.current_room == room).norm
         return statistics.mean(agent_norms)
 
-
+    def get_number_of_painting_viewers(self, painting):
+        """
+        Returns the number of viewers at a given painting
+        :return:
+        """
+        return len(self.agents.select(self.agents.current_painting == painting))
 
     def get_next_painting(self, room, painting):
         """
@@ -47,9 +53,13 @@ class MuseumModel(ap.Model):
         :return:
         """
         succesor_paintings = list(museum_graph.successors(painting))
-        if not succesor_paintings: return (room, painting)
+        if not succesor_paintings:
+            return (room, painting)
         painting = random.choice(succesor_paintings)
         return (self.get_room(painting), painting)
+
+    def get_last_painting(self):
+        return (self.get_room(self.last_painting), self.last_painting)
 
     def get_random_painting(self):
         painting = random.choice(list(museum_graph.nodes))
