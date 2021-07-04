@@ -1,42 +1,36 @@
 """
 Represent museum as a graph with each node having a graph itself
 """
-import networkx as nx
 import statistics
 from models.agents.attendee import *
-
-museum_graph = nx.DiGraph()
-museum_graph.add_node(1, art=(0, 1, 2))
-museum_graph.add_node(2, art=(3, 4, 5))
-museum_graph.add_node(3, art=(6, 7, 8))
-museum_graph.add_edge(1, 2)
-museum_graph.add_edge(2, 3)
-
+from models.environments.basic_museum import *
 
 class MuseumModel(ap.Model):
 
     def setup(self):
         """ Initialize the agents and network of the model. """
 
-        self.start_painting = museum_graph.nodes[1]['art'][0]
-        self.start_room = 1
+        self.start_painting = 0
+        self.start_room = self.get_room(self.start_painting)
 
         # Create agents and network
         self.agents = ap.AgentList(self, self.p.population, MuseumGuest)
-
         self.network = self.agents.network = ap.Network(self, museum_graph)
-
         self.network.add_agents(self.agents, self.network.nodes)
+
+    def get_room(self, painting_number):
+        return museum_graph.nodes[painting_number]['room']
 
     def update(self):
         """ Record variables after setup and each step.
         TODO: Add recording for the room/artwork
         """
-
         self.record("wanderers", len(self.agents.select(self.agents.norm == 1)))
-        self.record("lobby", len(self.agents.select(self.agents.current_room == 1)))
-        self.record("gallery", len(self.agents.select(self.agents.current_room == 2)))
-        self.record("exit", len(self.agents.select(self.agents.current_room == 3)))
+        self.record("linear walkers", len(self.agents.select(self.agents.norm == 0)))
+        self.record("lobby", len(self.agents.select(self.agents.current_room == "lobby")))
+        self.record("gallery", len(self.agents.select(self.agents.current_room == "gallery")))
+        self.record("gallery 2", len(self.agents.select(self.agents.current_room == "gallery2")))
+        self.record("exit", len(self.agents.select(self.agents.current_room == "exit")))
 
     def room_mean_norm(self, room):
         """Get the mean norm (i.e. wanderer or flow) for a given room"""
@@ -47,23 +41,19 @@ class MuseumModel(ap.Model):
 
     def get_next_painting(self, room, painting):
         """
-        Returns the next painting in orderly procession
+        Returns the next painting in designated painting order
         :param room:
         :param painting:
         :return:
         """
-        index = museum_graph.nodes[room]['art'].index(painting)
-        if index == (len(museum_graph.nodes[room]['art']) - 1):
-            if not museum_graph.successors(self.start_room): return (room, painting)
-            room = random.choice(list(museum_graph.successors(self.start_room)))
-            painting = museum_graph.nodes[room]['art'][0]
-        else:
-            painting = museum_graph.nodes[room]['art'][index+1]
-        return (room, painting)
+        succesor_paintings = list(museum_graph.successors(painting))
+        if not succesor_paintings: return (room, painting)
+        painting = random.choice(succesor_paintings)
+        return (self.get_room(painting), painting)
 
     def get_random_painting(self):
-        room = random.choice(list(museum_graph.nodes))
-        painting = random.choice(museum_graph.nodes[room]['art'])
+        painting = random.choice(list(museum_graph.nodes))
+        room = self.get_room(painting)
         return (room, painting)
 
     def step(self):
@@ -79,10 +69,10 @@ class MuseumModel(ap.Model):
         pass
 
 parameters = {
-    'population': 10,
+    'population': 100,
     'steps' : 100,
 }
 
 model = MuseumModel(parameters)
 results = model.run()
-print(results.variables.MuseumModel.head())
+print(results.variables.MuseumModel)
