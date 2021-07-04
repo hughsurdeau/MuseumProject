@@ -35,4 +35,7 @@ class MuseumGuest(ap.Agent):
         return self.model.get_random_painting()
 
     def linear_move(self):
-        return self.model.get_next_painting(self.current_room, self.current_painting)
+        if True:
+            return self.model.get_next_painting(self.current_room, self.current_painting)
+        else:
+            return (self.current_room, self.current_painting)
