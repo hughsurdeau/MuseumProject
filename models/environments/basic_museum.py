@@ -36,7 +36,14 @@ class MuseumLayout:
     def museum_graph(self):
         return self._museum_graph
 
-    def get_style(self, room):
+    def get_style(self, room: str)  -> str:
+        """
+        Returns the style of paintings in the room
+        :param room: str
+            The name of the room being investigated
+        :return: str
+            Name of the art style in the room
+        """
         return self.styles[room]
 
     def get_room(self, painting_number):
@@ -47,18 +54,30 @@ class MuseumLayout:
         """
         return self._museum_graph.nodes[painting_number]['room']
 
-    def get_prestige(self, painting_number):
+    def get_prestige(self, painting_number: int) -> int:
         """
         Returns the painting's prestige value
-        :param painting_number:
-        :return:
+        :param painting_number: int
+            The painting ID being investigated
+        :return: int
+            The prestige value of the painting (0-10)
         """
         return self._museum_graph.nodes[painting_number]['prestige']
 
-    def random_painting(self):
+    def random_painting(self)  -> int:
+        """
+        Returns a randomly selected painting in the museum
+        :return: int
+            The painting ID of the randomly selected painting
+        """
         return random.choice(self.museum_graph_list())
 
-    def museum_graph_list(self):
+    def museum_graph_list(self) -> list:
+        """
+        Returns all paintings in the museum as a list
+        :return: list
+            A list of all paintings in the museum
+        """
         return list(self._museum_graph)
 
     def get_successor_list(self, painting_number):
