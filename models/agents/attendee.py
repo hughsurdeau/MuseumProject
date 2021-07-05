@@ -84,10 +84,13 @@ class MuseumGuest(ap.Agent):
         room = self.model.museum_layout.get_room(painting)
         return (room, painting)
 
-    def get_painting_enjoyment(self, painting):
+    def get_painting_enjoyment(self, painting: int) -> int:
         """
         Returns a score for the agent's enjoyment of the painting
-        :return:
+        :param painting: int
+            Painting ID to investigate
+        :return: int
+            The enjoyment score of the painting for the agent
         """
         prestige = self.model.museum_layout.get_prestige(painting)
         room = self.model.museum_layout.get_room(painting)
@@ -99,15 +102,21 @@ class MuseumGuest(ap.Agent):
         score += (self.crowd_threshold - crowd_size)
         return score
 
-    def get_next_step(self, current_room, current_painting):
+    def get_next_step(self, current_room: str, current_painting: int) -> int:
         """
-        Cases:
-            1 - Base case. Returns next node
-            2 - Negative painting. Skip
-            3 - Divergent paths - evaluate. Get sum of all
-        :param node:
-        :param path:
-        :return:
+        Returns the next acceptable painting for the agent. Covers three cases:
+            1 - Current painting has one successor paintings. If the enjoyment rating
+                is positive, return it. Else, continue to paintings' successor node
+            2 - Current painting has no successor paintings. Exit
+            3 - Current painting has numerous successor paintings. Each possible
+                route is investigated and the one returning the maximum overall
+                score is returned
+        :param current_room: str
+            Current room the agent is in
+        :param current_painting: int
+            Current painting the agent is looking at
+        :return: int
+            The next acceptable painting for the agent
         """
         successors = self.model.museum_layout.get_successor_list(current_painting)
         if len(successors) == 1: #when there is only 1 neighbour
@@ -121,7 +130,7 @@ class MuseumGuest(ap.Agent):
         score, next_painting = self.route_evaluator(current_painting)
         return next_painting
 
-    def route_evaluator(self, painting):
+    def route_evaluator(self, painting: int) -> tuple[int, str]:
         """
         Evaluates the score of different possible routes
         :param succesors:

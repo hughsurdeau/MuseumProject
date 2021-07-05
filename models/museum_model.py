@@ -9,7 +9,7 @@ from models.agents.route_panner import *
 
 class MuseumModel(ap.Model):
 
-    def setup(self):
+    def setup(self) -> None:
         """ Initialize the agents and network of the model. """
         self.museum_layout = MuseumLayout()
 
@@ -38,7 +38,7 @@ class MuseumModel(ap.Model):
         """
         return self.museum_layout.get_room(painting_number)
 
-    def update(self):
+    def update(self) -> None:
         """
         Record variables after setup and each step.
         TODO: Add recording for the room/artwork
@@ -110,7 +110,7 @@ class MuseumModel(ap.Model):
         room = self.get_room(painting)
         return (room, painting)
 
-    def delete_exited_agents(self):
+    def delete_exited_agents(self) -> None:
         """
         Removes all agents at the exit
         """
@@ -118,7 +118,7 @@ class MuseumModel(ap.Model):
             self.removed += 1
             self.agents.remove(agent)
 
-    def add_new_agents(self):
+    def add_new_agents(self) -> None:
         """
         Adds new agents to the simulation
         """
@@ -128,7 +128,7 @@ class MuseumModel(ap.Model):
             self.network.add_agents(self.agents, self.network.nodes)
 
 
-    def step(self):
+    def step(self) -> None:
         """ Define the models' events per simulation step. """
 
         # Call move for each agent
@@ -136,7 +136,7 @@ class MuseumModel(ap.Model):
         self.delete_exited_agents()
         self.add_new_agents()
 
-    def end(self):
+    def end(self) -> None:
         """ Record evaluation measures at the end of the simulation. """
 
         # Record final evaluation measures
