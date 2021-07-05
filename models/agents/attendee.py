@@ -8,7 +8,7 @@ class MuseumGuest(ap.Agent):
         """ Initialize a new variable at agent creation. """
         self.norm = random.randint(0, 1)  # Linear flow = 0 Wandering = 1
         self.current_room = self.model.start_room
-        self.current_painting = self.model.start_painting
+        self.current_painting = self.model.first_painting
         self.boredom_threshold = (random.randint(1,10)) ** -1 #Reciprocal of desired amount of time
         self.crowd_threshold = random.randint(10, 100)
         self.desire_to_leave = random.uniform(0.90, 0.99)

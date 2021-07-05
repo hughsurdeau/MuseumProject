@@ -10,16 +10,17 @@ class MuseumModel(ap.Model):
 
     def setup(self):
         """ Initialize the agents and network of the model. """
+        self.museum_layout = MuseumLayout()
 
-        self.start_painting = 0
-        self.start_room = self.get_room(self.start_painting)
-        self.last_painting = 9 #TODO replace with actual method to get last painting
+        self.first_painting = self.museum_layout.first_painting
+        self.start_room = self.get_room(self.first_painting)
+        self.last_painting = self.museum_layout.last_painting
         self.added = 0
         self.removed = 0
 
         # Create agents and network
         self.agents = ap.AgentList(self, self.p.population, MuseumGuest)
-        self.network = self.agents.network = ap.Network(self, museum_graph)
+        self.network = self.agents.network = ap.Network(self, self.museum_layout.museum_graph)
         self.network.add_agents(self.agents, self.network.nodes)
 
     def get_room(self, painting_number: int) -> str:
@@ -34,7 +35,7 @@ class MuseumModel(ap.Model):
         :return: str
             Name of the room the painting is in
         """
-        return museum_graph.nodes[painting_number]['room']
+        return self.museum_layout.get_room(painting_number)
 
     def update(self):
         """
@@ -82,7 +83,7 @@ class MuseumModel(ap.Model):
         :return: tuple
             Tuple of new (room, painting)
         """
-        succesor_paintings = list(museum_graph.successors(painting))
+        succesor_paintings = self.museum_layout.get_successor_list(painting)
         if not succesor_paintings:
             return (room, painting)
         painting = random.choice(succesor_paintings)
@@ -104,7 +105,7 @@ class MuseumModel(ap.Model):
         :return: tuple
             Tuple of random (room, painting)
         """
-        painting = random.choice(list(museum_graph.nodes))
+        painting = self.museum_layout.random_room()
         room = self.get_room(painting)
         return (room, painting)
 
