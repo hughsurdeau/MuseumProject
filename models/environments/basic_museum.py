@@ -37,9 +37,6 @@ class MuseumLayout:
             if i > 0:
                 self._museum_graph.add_edge(i - 1, i)
 
-    def get_style(self, room):
-        return self.styles[room]
-
     @property
     def last_painting(self):
         return self._last_painting
@@ -52,6 +49,9 @@ class MuseumLayout:
     def museum_graph(self):
         return self._museum_graph
 
+    def get_style(self, room):
+        return self.styles[room]
+
     def get_room(self, painting_number):
         """
         Gets the name of the room the painting is in
@@ -60,7 +60,7 @@ class MuseumLayout:
         """
         return self._museum_graph.nodes[painting_number]['room']
 
-    def random_room(self):
+    def random_painting(self):
         return random.choice(self.museum_graph_list())
 
     def museum_graph_list(self):

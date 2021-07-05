@@ -105,7 +105,7 @@ class MuseumModel(ap.Model):
         :return: tuple
             Tuple of random (room, painting)
         """
-        painting = self.museum_layout.random_room()
+        painting = self.museum_layout.random_painting()
         room = self.get_room(painting)
         return (room, painting)
 
