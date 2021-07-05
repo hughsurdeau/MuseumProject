@@ -1,8 +1,8 @@
 """
 Main TODO:
-    3 - Rooms have a variety of styles attached to them
-    4 - Agents plan their route
-    2 - Unit tests
+    1 - Unit tests
+    2 - Add simulation visualisation
+    3 - Add simulation graphing
 
 """
 from models.museum_model import MuseumModel

@@ -5,6 +5,7 @@ from __future__ import annotations
 import statistics
 from models.agents.attendee import *
 from models.environments.basic_museum import *
+from models.agents.route_panner import *
 
 class MuseumModel(ap.Model):
 

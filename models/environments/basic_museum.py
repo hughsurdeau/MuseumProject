@@ -2,19 +2,6 @@ import networkx as nx
 import random
 from math import ceil
 
-
-"""
-museum_graph = nx.DiGraph()
-rooms = ["lobby", "gallery", "gallery2", "exit"]
-div = ceil(10/len(rooms))
-for i in range(0, 10, 2):
-    museum_graph.add_node(i, room=rooms[i // div])
-    museum_graph.add_node(i + 1, room=rooms[(i + 1) // div])
-    museum_graph.add_edge(i, i + 1)
-    if i > 0:
-        museum_graph.add_edge(i-1, i)
-"""
-
 class MuseumLayout:
     """
     A class to wrap the museum graph network + provide some util
@@ -31,8 +18,8 @@ class MuseumLayout:
 
         div = ceil(10 / len(rooms))
         for i in range(0, 10, 2):
-            self._museum_graph.add_node(i, room=rooms[i // div])
-            self._museum_graph.add_node(i + 1, room=rooms[(i + 1) // div])
+            self._museum_graph.add_node(i, room=rooms[i // div], prestige=random.uniform(0, 10))
+            self._museum_graph.add_node(i + 1, room=rooms[(i + 1) // div], prestige=random.uniform(0, 10))
             self._museum_graph.add_edge(i, i + 1)
             if i > 0:
                 self._museum_graph.add_edge(i - 1, i)
@@ -59,6 +46,14 @@ class MuseumLayout:
         :return:
         """
         return self._museum_graph.nodes[painting_number]['room']
+
+    def get_prestige(self, painting_number):
+        """
+        Returns the painting's prestige value
+        :param painting_number:
+        :return:
+        """
+        return self._museum_graph.nodes[painting_number]['prestige']
 
     def random_painting(self):
         return random.choice(self.museum_graph_list())
