@@ -14,6 +14,8 @@ class MuseumModel(ap.Model):
         self.start_painting = 0
         self.start_room = self.get_room(self.start_painting)
         self.last_painting = 9 #TODO replace with actual method to get last painting
+        self.added = 0
+        self.removed = 0
 
         # Create agents and network
         self.agents = ap.AgentList(self, self.p.population, MuseumGuest)
@@ -106,11 +108,31 @@ class MuseumModel(ap.Model):
         room = self.get_room(painting)
         return (room, painting)
 
+    def delete_exited_agents(self):
+        """
+        Removes all agents at the exit
+        """
+        for agent in self.agents.select(self.agents.current_room == "exit"):
+            self.removed += 1
+            self.agents.remove(agent)
+
+    def add_new_agents(self):
+        """
+        Adds new agents to the simulation
+        """
+        if random.randint(0,2) > 1:
+            self.added += 1
+            self.agents += ap.AgentList(self, 1, MuseumGuest)
+            self.network.add_agents(self.agents, self.network.nodes)
+
+
     def step(self):
         """ Define the models' events per simulation step. """
 
         # Call move for each agent
         self.agents.move()
+        self.delete_exited_agents()
+        self.add_new_agents()
 
     def end(self):
         """ Record evaluation measures at the end of the simulation. """
