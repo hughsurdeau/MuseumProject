@@ -20,7 +20,8 @@ class MuseumGuest(ap.Agent):
 
     @desire_to_leave.setter
     def desire_to_leave(self, new_desire):
-        self._desire_to_leave = new_desire
+        if (0 <= new_desire and new_desire <= 1):
+            self._desire_to_leave = new_desire
 
     @property
     def current_room(self):
@@ -36,7 +37,8 @@ class MuseumGuest(ap.Agent):
 
     @boredom_threshold.setter
     def boredom_threshold(self, new_threshold):
-        self._boredom_threshold = new_threshold
+        if (0 <= new_threshold and new_threshold <= 1):
+            self._boredom_threshold = new_threshold
 
     def update_norms(self, room_mean_norm: float, seed=random.seed()) -> None:
         """
@@ -66,7 +68,7 @@ class MuseumGuest(ap.Agent):
         """
         return random.uniform(0, 1) > self.desire_to_leave
 
-    def move(self) -> None:
+    def move(self, seed=random.seed()) -> None:
         """
         Updates the agent's location
         """
@@ -78,7 +80,7 @@ class MuseumGuest(ap.Agent):
         room_norm = self.model.room_mean_norm(self.current_room)
         self.update_norms(room_norm)
 
-    def wander_move(self) -> tuple[str, int]:
+    def wander_move(self, seed=random.seed()) -> tuple[str, int]:
         """
         Updates the agent's location
         :return: tuple

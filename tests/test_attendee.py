@@ -40,7 +40,10 @@ class TestMuseumGuest(TestCase):
         self.assertEqual(1, 1)
 
     def test_wander_move(self):
-        self.assertEqual(1, 1)
+        attendee = MuseumGuest(test_model)
+        self.assertEqual(attendee.wander_move(random.seed(10)), ('gallery2', 6))
+        self.assertEqual(attendee.wander_move(random.seed(15)), ('exit', 9))
+        self.assertEqual(attendee.wander_move(random.seed(213)), ('gallery', 3))
 
     def test_linear_move(self):
         self.assertEqual(1, 1)
