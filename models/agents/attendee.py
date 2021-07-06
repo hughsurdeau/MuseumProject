@@ -7,14 +7,38 @@ class MuseumGuest(ap.Agent):
     def setup(self):
         """ Initialize a new variable at agent creation. """
         self.norm = random.randint(0, 1)  # Linear flow = 0 Wandering = 1
-        self.current_room = self.model.start_room
+        self._current_room = self.model.start_room
         self.current_painting = self.model.first_painting
         self.preference = "classic"
-        self.boredom_threshold = (random.randint(1,10)) ** -1 #Reciprocal of desired amount of time
+        self._boredom_threshold = (random.randint(1,10)) ** -1 #Reciprocal of desired amount of time
         self.crowd_threshold = random.randint(10, 100)
-        self.desire_to_leave = random.uniform(0.90, 0.99)
+        self._desire_to_leave = random.uniform(0.90, 0.99)
 
-    def update_norms(self):
+    @property
+    def desire_to_leave(self):
+        return self._desire_to_leave
+
+    @desire_to_leave.setter
+    def desire_to_leave(self, new_desire):
+        self._desire_to_leave = new_desire
+
+    @property
+    def current_room(self):
+        return self._current_room
+
+    @current_room.setter
+    def current_room(self, new_room):
+        self._current_room = new_room
+
+    @property
+    def boredom_threshold(self):
+        return self._boredom_threshold
+
+    @boredom_threshold.setter
+    def boredom_threshold(self, new_threshold):
+        self._boredom_threshold = new_threshold
+
+    def update_norms(self, room_mean_norm: float, seed=random.seed()) -> None:
         """
         Updates the agent's norms. Does so by taking the mean of the
         other agent's normative behaviour with a probability weighting
@@ -23,11 +47,10 @@ class MuseumGuest(ap.Agent):
         a bit more of a spectrum.
         """
         if self.current_room != "exit":
-            mean_room_norm = self.model.room_mean_norm(self.current_room)
             seed = random.uniform(0, 1)
-            self.norm = int(seed < mean_room_norm)
+            self.norm = int(seed < room_mean_norm)
 
-    def check_if_bored(self) -> bool:
+    def check_if_bored(self, seed=random.seed()) -> bool:
         """
         Checks if the agent is bored of the current painting
 
@@ -35,7 +58,7 @@ class MuseumGuest(ap.Agent):
         """
         return random.uniform(0, 1) < self.boredom_threshold
 
-    def check_if_wants_to_leave(self) -> bool:
+    def check_if_wants_to_leave(self, seed=random.seed()) -> bool:
         """
         Check if the wandering agents wants to leave the museum
 
@@ -43,7 +66,7 @@ class MuseumGuest(ap.Agent):
         """
         return random.uniform(0, 1) > self.desire_to_leave
 
-    def move(self):
+    def move(self) -> None:
         """
         Updates the agent's location
         """
@@ -52,7 +75,8 @@ class MuseumGuest(ap.Agent):
                 self.current_room, self.current_painting = self.linear_move()
             else:
                 self.current_room, self.current_painting = self.wander_move()
-        self.update_norms()
+        room_norm = self.model.room_mean_norm(self.current_room)
+        self.update_norms(room_norm)
 
     def wander_move(self) -> tuple[str, int]:
         """
@@ -73,12 +97,6 @@ class MuseumGuest(ap.Agent):
         Updates the agent's location
         :return: tuple
             A tuple of the agent's new (room, painting)
-
-        room, painting = self.model.get_next_painting(self.current_room, self.current_painting)
-        print(self.get_next_step(self.current_room, self.current_painting))
-        while self.model.get_number_of_painting_viewers(painting) > self.crowd_threshold:
-            if painting == self.model.last_painting: return (room, painting)
-            room, painting = self.model.get_next_painting(room, painting)
         """
         painting = self.get_next_step(self.current_room, self.current_painting)
         room = self.model.museum_layout.get_room(painting)
@@ -124,7 +142,7 @@ class MuseumGuest(ap.Agent):
             if self.get_painting_enjoyment(next_painting) > 0:
                 return current_painting
             else:
-                return self.get_next_step(next_painting, next_room)
+                return self.get_next_step(next_room, next_painting)
         if len(successors) == 0:
             return current_painting
         score, next_painting = self.route_evaluator(current_painting)

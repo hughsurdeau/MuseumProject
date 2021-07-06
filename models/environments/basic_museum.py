@@ -90,6 +90,7 @@ class MuseumLayout:
         :return: list
             List of all successor paintings
         """
+        print(painting_number)
         return list(self._museum_graph.successors(painting_number))
 
 

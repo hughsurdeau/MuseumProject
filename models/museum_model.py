@@ -144,9 +144,10 @@ class MuseumModel(ap.Model):
 
 parameters = {
     'population': 100,
-    'steps' : 100,
+    'steps' : 10000,
 }
 
-model = MuseumModel(parameters)
-results = model.run()
-print(results.variables.MuseumModel)
+if __name__ == "__main__":
+    model = MuseumModel(parameters)
+    results = model.run()
+    print(results.variables.MuseumModel)
