@@ -3,8 +3,6 @@ from models import museum_model
 
 
 class TestMuseumModel(TestCase):
-    def test_setup(self):
-        self.fail()
 
     def test_get_room(self):
         self.fail()
@@ -32,3 +30,11 @@ class TestMuseumModel(TestCase):
 
     def test_end(self):
         self.fail()
+
+    def test_delete_exited_agents(self):
+        self.fail()
+
+    def test_add_new_agents(self):
+        pass
+
+    

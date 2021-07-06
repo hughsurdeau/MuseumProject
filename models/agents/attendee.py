@@ -76,7 +76,7 @@ class MuseumGuest(ap.Agent):
             if self.norm == 0:
                 self.current_room, self.current_painting = self.linear_move()
             else:
-                self.current_room, self.current_painting = self.wander_move()
+                self.current_room, self.current_painting = self.wander_move(seed)
         room_norm = self.model.room_mean_norm(self.current_room)
         self.update_norms(room_norm)
 

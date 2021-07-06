@@ -37,6 +37,7 @@ class TestMuseumGuest(TestCase):
         self.assertEqual(True, attendee.check_if_wants_to_leave(random.seed(10)))
 
     def test_move(self):
+        # TODO implement this
         self.assertEqual(1, 1)
 
     def test_wander_move(self):
@@ -46,4 +47,14 @@ class TestMuseumGuest(TestCase):
         self.assertEqual(attendee.wander_move(random.seed(213)), ('gallery', 3))
 
     def test_linear_move(self):
+        attendee = MuseumGuest(test_model)
+        self.assertEqual(attendee.linear_move(), ('lobby', 0))
+
+    def test_get_painting_enjoyment(self):
+        self.assertEqual(1, 1)
+
+    def test_route_evaluator(self):
+        self.assertEqual(1, 1)
+
+    def test_get_next_step(self):
         self.assertEqual(1, 1)
