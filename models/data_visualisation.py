@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 #Fonts
 plt.rcParams['font.family'] = 'sans-serif'
@@ -21,8 +22,7 @@ class MuseumVisualisation:
     def __init__(self, df):
         self.df = df
 
-    @staticmethod
-    def graph_time_step(positions, wanderers):
+    def graph_time_step(self, positions, wanderers):
         """
         The building has 3 rooms that need to be modelled and 10 artworks
         Rooms: lobby, gallery, gallery2, exit
@@ -40,11 +40,13 @@ class MuseumVisualisation:
         ax.set_xlabel('Painting Number')
         ax.set_ylabel('Number of Viewers')
         ax.set_ylim(0, 100)
-        fig.show()
+        return (fig, ax)
 
-
-    def animate_time_steps(self):
-        pass
+    def animate_time_steps(self, i):
+        viewers = self.df.index(i)['Viewer Numbers']
+        wanderers = self.df.index(i)['Wanderer Numbers']
+        fig, ax = self.graph_time_step(viewers, wanderers)
+        return fig
 
 example = [2, 2, 1, 3, 0, 3, 2, 5, 3]
 wands = [1, 1, 1, 0, 0, 3, 2, 1, 1]
