@@ -49,6 +49,8 @@ class MuseumModel(ap.Model):
         self.record("gallery", len(self.agents.select(self.agents.current_room == "gallery")))
         self.record("gallery 2", len(self.agents.select(self.agents.current_room == "gallery2")))
         self.record("exit", len(self.agents.select(self.agents.current_room == "exit")))
+        self.record("Viewer Numbers", self.get_painting_viewers_list())
+        self.record("Wanderer Numbers", self.get_wanderers_list())
 
     def room_mean_norm(self, room: str) -> float:
         """
@@ -61,6 +63,25 @@ class MuseumModel(ap.Model):
         """
         agent_norms = self.agents.select(self.agents.current_room == room).norm
         return statistics.mean(agent_norms)
+
+    def get_painting_viewers_list(self) -> list:
+        """
+        Returns a list of the number of all paintings
+        :return:
+        """
+        painting_numbers = []
+        for i in range(self.last_painting):
+            painting_numbers.append(self.get_number_of_painting_viewers(i))
+        return painting_numbers
+
+    def get_wanderers_list(self) -> list:
+        wanderer_numbers = []
+        for i in range(self.last_painting):
+            wanderer_numbers.append(self.get_number_of_wanderer_viewers(i))
+        return wanderer_numbers
+
+    def get_number_of_wanderer_viewers(self, painting: int) -> int:
+        return len(self.agents.select(self.agents.current_painting == painting).select(self.agents.norm == 1))
 
     def get_number_of_painting_viewers(self, painting: int) -> int:
         """
@@ -144,7 +165,7 @@ class MuseumModel(ap.Model):
 
 parameters = {
     'population': 100,
-    'steps' : 10000,
+    'steps' : 100,
 }
 
 if __name__ == "__main__":
