@@ -157,7 +157,7 @@ class MuseumGuest(ap.Agent):
         :return:
         """
         successors = self.model.museum_layout.get_successor_list(painting)
-        curr_score = self.get_painting_enjoyment(painting, )
+        curr_score = self.get_painting_enjoyment(painting)
         if not successors:
             return max(0, curr_score), painting
         successor_scores = []
