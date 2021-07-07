@@ -15,18 +15,9 @@ class TestMuseumModel(TestCase):
         self.assertEqual(100, test_model.get_number_of_painting_viewers(0))
 
     def test_get_next_painting(self):
-        self.assertEqual(1, 1)
-
-    def test_get_last_painting(self):
-        self.assertEqual(1, 1)
-
-    def test_get_random_painting(self):
-        self.assertEqual(1, 1)
+        self.assertEqual(test_model.get_next_painting("lobby", 0)[1], 1)
 
     def test_step(self):
-        self.assertEqual(1, 1)
-
-    def test_end(self):
         self.assertEqual(1, 1)
 
     def test_delete_exited_agents(self):
