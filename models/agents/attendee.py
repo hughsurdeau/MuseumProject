@@ -6,7 +6,7 @@ class MuseumGuest(ap.Agent):
 
     def setup(self):
         """ Initialize a new variable at agent creation. """
-        self.norm = self.assign_initial_norm()
+        self.norm = self.assign_initial_norm() #Linear = 0, wandering = 1
         self._current_room = self.model.start_room
         self.current_painting = self.model.first_painting
         self.preference = "classic"
@@ -15,7 +15,7 @@ class MuseumGuest(ap.Agent):
         self._desire_to_leave = random.uniform(0.90, 0.99)
 
     def assign_initial_norm(self, seed=random.seed()):
-        return int(self.model.asshole_ratio < random.uniform(0, 1))
+        return int(self.model.asshole_ratio > random.uniform(0, 1))
 
     @property
     def desire_to_leave(self):

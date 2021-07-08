@@ -180,7 +180,5 @@ if __name__ == "__main__":
     results = model.run()
     print(results.variables.MuseumModel)
     curr_time = str(datetime.datetime.now())
-    #file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum" + curr_time + ".csv"
-    #May have to redo 50 and 60 AT as these files already existed
     file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum_10AT.csv"
     results.variables.MuseumModel.to_csv(file_path)
