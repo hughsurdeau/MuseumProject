@@ -6,6 +6,7 @@ import statistics
 import datetime
 from models.agents.attendee import *
 from models.environments.basic_museum import *
+from numpy.random import poisson
 from models.agents.route_panner import *
 
 class MuseumModel(ap.Model):
@@ -13,6 +14,7 @@ class MuseumModel(ap.Model):
     def setup(self) -> None:
         """ Initialize the agents and network of the model. """
         self.museum_layout = MuseumLayout()
+        self.asshole_ratio = 0.1 #Fraction of fellas who are assholes
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
@@ -24,6 +26,7 @@ class MuseumModel(ap.Model):
         self.agents = ap.AgentList(self, self.p.population, MuseumGuest)
         self.network = self.agents.network = ap.Network(self, self.museum_layout.museum_graph)
         self.network.add_agents(self.agents, self.network.nodes)
+
 
     def get_room(self, painting_number: int) -> str:
         """
@@ -140,11 +143,13 @@ class MuseumModel(ap.Model):
             self.removed += 1
             self.agents.remove(agent)
 
-    def add_new_agents(self) -> None:
+    def add_new_agents(self, mean_new_agents=2) -> None:
         """
         Adds new agents to the simulation
         """
-        if random.randint(0,4) > 1:
+        number_of_new_visitors = poisson(mean_new_agents)
+        print(number_of_new_visitors)
+        for i in range(number_of_new_visitors):
             self.added += 1
             self.agents += ap.AgentList(self, 1, MuseumGuest)
             self.network.add_agents(self.agents, self.network.nodes)
@@ -167,8 +172,8 @@ class MuseumModel(ap.Model):
 if __name__ == "__main__":
 
     parameters = {
-        'population': 100,
-        'steps': 100,
+        'population': 20,
+        'steps': 1000,
     }
 
     model = MuseumModel(parameters)
@@ -176,5 +181,6 @@ if __name__ == "__main__":
     print(results.variables.MuseumModel)
     curr_time = str(datetime.datetime.now())
     #file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum" + curr_time + ".csv"
-    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum_example.csv"
+    #May have to redo 50 and 60 AT as these files already existed
+    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum_10AT.csv"
     results.variables.MuseumModel.to_csv(file_path)

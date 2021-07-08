@@ -6,13 +6,16 @@ class MuseumGuest(ap.Agent):
 
     def setup(self):
         """ Initialize a new variable at agent creation. """
-        self.norm = random.randint(0, 1)  # Linear flow = 0 Wandering = 1
+        self.norm = self.assign_initial_norm()
         self._current_room = self.model.start_room
         self.current_painting = self.model.first_painting
         self.preference = "classic"
         self._boredom_threshold = (random.randint(1,10)) ** -1 #Reciprocal of desired amount of time
         self.crowd_threshold = random.randint(10, 100)
         self._desire_to_leave = random.uniform(0.90, 0.99)
+
+    def assign_initial_norm(self, seed=random.seed()):
+        return int(self.model.asshole_ratio < random.uniform(0, 1))
 
     @property
     def desire_to_leave(self):
@@ -60,7 +63,7 @@ class MuseumGuest(ap.Agent):
         """
         #Check if the agent still considers the painting worth staying at
         current_painting_score = self.get_painting_enjoyment(self.current_painting)
-        return True if current_painting_score < 0 else (random.uniform(0, 1) < self.boredom_threshold)
+        return True if (current_painting_score < 0) else (random.uniform(0, 1) < self.boredom_threshold)
 
     def check_if_wants_to_leave(self, seed=random.seed()) -> bool:
         """
