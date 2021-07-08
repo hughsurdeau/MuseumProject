@@ -3,6 +3,7 @@ Represent museum as a graph with each node having a graph itself
 """
 from __future__ import annotations
 import statistics
+import datetime
 from models.agents.attendee import *
 from models.environments.basic_museum import *
 from models.agents.route_panner import *
@@ -143,7 +144,7 @@ class MuseumModel(ap.Model):
         """
         Adds new agents to the simulation
         """
-        if random.randint(0,2) > 1:
+        if random.randint(0,4) > 1:
             self.added += 1
             self.agents += ap.AgentList(self, 1, MuseumGuest)
             self.network.add_agents(self.agents, self.network.nodes)
@@ -163,12 +164,17 @@ class MuseumModel(ap.Model):
         # Record final evaluation measures
         pass
 
-parameters = {
-    'population': 100,
-    'steps' : 100,
-}
-
 if __name__ == "__main__":
+
+    parameters = {
+        'population': 100,
+        'steps': 100,
+    }
+
     model = MuseumModel(parameters)
     results = model.run()
     print(results.variables.MuseumModel)
+    curr_time = str(datetime.datetime.now())
+    #file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum" + curr_time + ".csv"
+    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum_example.csv"
+    results.variables.MuseumModel.to_csv(file_path)

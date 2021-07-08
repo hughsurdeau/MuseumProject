@@ -58,7 +58,9 @@ class MuseumGuest(ap.Agent):
 
         :return: bool
         """
-        return random.uniform(0, 1) < self.boredom_threshold
+        #Check if the agent still considers the painting worth staying at
+        current_painting_score = self.get_painting_enjoyment(self.current_painting)
+        return True if current_painting_score < 0 else (random.uniform(0, 1) < self.boredom_threshold)
 
     def check_if_wants_to_leave(self, seed=random.seed()) -> bool:
         """
