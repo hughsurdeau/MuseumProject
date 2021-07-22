@@ -14,7 +14,7 @@ class MuseumModel(ap.Model):
     def setup(self) -> None:
         """ Initialize the agents and network of the model. """
         self.museum_layout = MuseumLayout()
-        self.asshole_ratio = 0.1 #Fraction of fellas who are assholes
+        self.asshole_ratio = 0.45 #Fraction of fellas who are assholes
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
@@ -180,5 +180,5 @@ if __name__ == "__main__":
     results = model.run()
     print(results.variables.MuseumModel)
     curr_time = str(datetime.datetime.now())
-    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum_10AT.csv"
+    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum_45AT.csv"
     results.variables.MuseumModel.to_csv(file_path)
