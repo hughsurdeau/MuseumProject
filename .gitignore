@@ -1,4 +1,5 @@
 # Project exclude paths
 /venv/
 /data/pickle/
+/prism_install/
 *.pkl

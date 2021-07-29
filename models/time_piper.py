@@ -9,7 +9,7 @@ class TimePiper:
         self.people_scale = people_scale
         self.day_length = day_length
 
-    def get_mean_visitors(self, time):
+    def get_mean_visitors(self, time: int) -> int:
         """
         Returns the mean number of visitors at the time.
         Does so by taking the CDF of a normal dist with mean of 1/2 length of day and sigma

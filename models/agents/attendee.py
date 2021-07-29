@@ -147,7 +147,7 @@ class MuseumGuest(ap.Agent):
         if len(successors) == 1: #when there is only 1 neighbour
             next_room, next_painting = self.model.get_next_painting(current_room, current_painting)
             if self.get_painting_enjoyment(next_painting) > 0:
-                return current_painting
+                return current_painting #TODO should this be changed to next painting?
             else:
                 return self.get_next_step(next_room, next_painting)
         if len(successors) == 0:
