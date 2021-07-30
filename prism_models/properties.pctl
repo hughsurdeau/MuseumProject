@@ -1,0 +1,5 @@
+const int x;
+label "end" = r>0;
+
+Pmin=? [ F "end" & r=x ]
+Pmax=? [ F "end" & r=x ]
