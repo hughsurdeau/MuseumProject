@@ -7,7 +7,10 @@ import datetime
 from models.agents.attendee import *
 from models.environments.basic_museum import *
 from numpy.random import poisson
-from models.agents.route_panner import *
+from time_piper import TimePiper
+
+day_length = 144 # Length of day (in time steps)
+number_of_days = 10 # Number of days to simulate
 
 class MuseumModel(ap.Model):
 
@@ -15,6 +18,9 @@ class MuseumModel(ap.Model):
         """ Initialize the agents and network of the model. """
         self.museum_layout = MuseumLayout()
         self.asshole_ratio = 0.45 #Fraction of fellas who are assholes
+        self.time_piper = TimePiper(day_length=day_length)
+        self.day_length = day_length
+        self.current_time = 0
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
@@ -135,6 +141,13 @@ class MuseumModel(ap.Model):
         room = self.get_room(painting)
         return (room, painting)
 
+    def delete_all_agents(self) -> None:
+        """
+        Removes all agents from the museum
+        """
+        for agent in self.agents:
+            self.agents.remove(agent)
+
     def delete_exited_agents(self) -> None:
         """
         Removes all agents at the exit
@@ -143,12 +156,13 @@ class MuseumModel(ap.Model):
             self.removed += 1
             self.agents.remove(agent)
 
-    def add_new_agents(self, mean_new_agents=2) -> None:
+    def add_new_agents(self) -> None:
         """
         Adds new agents to the simulation
         """
+        mean_new_agents = self.time_piper.get_mean_visitors(self.current_time)
         number_of_new_visitors = poisson(mean_new_agents)
-        print(number_of_new_visitors)
+        print("\n%i new agents on day %i " % (number_of_new_visitors,self.current_time))
         for i in range(number_of_new_visitors):
             self.added += 1
             self.agents += ap.AgentList(self, 1, MuseumGuest)
@@ -163,6 +177,12 @@ class MuseumModel(ap.Model):
         self.delete_exited_agents()
         self.add_new_agents()
 
+        if self.current_time == self.day_length:
+            self.delete_all_agents()
+            self.current_time = 0
+        else:
+            self.current_time += 1
+
     def end(self) -> None:
         """ Record evaluation measures at the end of the simulation. """
 
@@ -173,7 +193,7 @@ if __name__ == "__main__":
 
     parameters = {
         'population': 20,
-        'steps': 1000,
+        'steps': day_length * number_of_days,
     }
 
     model = MuseumModel(parameters)

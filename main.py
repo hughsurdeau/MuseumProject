@@ -1,15 +1,31 @@
 """
 Main TODO:
-    1.5 - Test the new decision making process on a nonlineaar museum layout. Enlarge the museum
-    2 - Properly test that the algorithm works with some set scenarios. Really need to be certain its not fucked
-    3 - Simulate as a daily thing i.e. one day in the museum over and over. Amount of people entering the museum
-        can be variable and thus be something that agents use in their estimation
-    4 - Adding time piping ~ do it in 12 hour days, with 144 stages of 10 mins each?
-
+    1 - Add time piping into main sim - Connect it up later? - DONE
+    2 - Make new nonlinear museum layout 
+    3 - Test to make sure everything is working ok
+    4 - Add in PRISM data for wandering vs linear
+    5 - Make more complex PRISM model for wandering vs linear
+    6 - Make PRISM model for # of people up ahead
+    7 - Integrate data
+    8 - Write etc
 
 
 TODO: Maybe interesting approaches
     1 - Maybe a volume level of each room?
 """
 from models.museum_model import MuseumModel
+
+if __name__ == "__main__":
+
+    parameters = {
+        'population': 20,
+        'steps': 1000,
+    }
+
+    model = MuseumModel(parameters)
+    results = model.run()
+    print(results.variables.MuseumModel)
+    curr_time = str(datetime.datetime.now())
+    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum_45AT.csv"
+    results.variables.MuseumModel.to_csv(file_path)
 

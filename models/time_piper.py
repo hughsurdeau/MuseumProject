@@ -5,7 +5,7 @@ from scipy.stats import norm
 from math import ceil
 
 class TimePiper:
-    def __init__(self, day_length=144, people_scale=2000):
+    def __init__(self, day_length=144, people_scale=500):
         self.people_scale = people_scale
         self.day_length = day_length
 
