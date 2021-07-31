@@ -1,10 +1,11 @@
 """
 Main TODO:
     1 - Add time piping into main sim - DONE
-    2 - Make new nonlinear museum layout -Saturday - Somewhat DONE?
-    3 - Test to make sure everything is working ok - Saturday
-    4 - Add in PRISM data for wandering vs linear - Saturday
+    2 - Make new nonlinear museum layout -DONE?
+    3 - Test to make sure everything is working ok - DONE
+    4 - Add in PRISM data for wandering vs linear -
     5 - Make more complex PRISM model for wandering vs linear - Sunday
+    5.5 - Automated PRISM shit
     6 - Make PRISM model for # of people up ahead - Monday
     7 - Integrate data - Tuesday
     8 - Write etc

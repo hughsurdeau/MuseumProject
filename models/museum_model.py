@@ -9,8 +9,8 @@ from models.environments.basic_museum import *
 from numpy.random import poisson
 from time_piper import TimePiper
 
-day_length = 14 # Length of day (in time steps)
-number_of_days = 1 # Number of days to simulate
+day_length = 144 # Length of day (in time steps)
+number_of_days = 10 # Number of days to simulate
 
 class MuseumModel(ap.Model):
 
@@ -170,6 +170,34 @@ class MuseumModel(ap.Model):
             self.added += 1
             self.agents += ap.AgentList(self, 1, MuseumGuest)
             self.network.add_agents(self.agents, self.network.nodes)
+
+    def get_number_of_viewers(self, room: str) -> int:
+        """
+        Returns the total number of viewers in a given room
+        :param room:
+        :return:
+        """
+        return len(self.agents.select(self.agents.room == room))
+
+    def get_expected_viewers(self) -> int:
+        """
+        Returns the expected number of viewers in each room
+        at the given time of day.
+        :return:
+        """
+        return 1
+
+    def get_room_surpluss_viewers(self, room: str) -> float:
+        """
+        Gets the relative surpluss of viewers in a room
+        Expressed as a fraction of expected vs actual
+        :param room:
+        :return:
+        """
+        curr_viewers = self.get_number_of_viewers(room)
+        expected_viewers = self.get_expected_viewers()
+        return (curr_viewers/expected_viewers)
+
 
     def step(self) -> None:
         """ Define the models' events per simulation step. """
