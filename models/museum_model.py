@@ -9,8 +9,8 @@ from models.environments.basic_museum import *
 from numpy.random import poisson
 from time_piper import TimePiper
 
-day_length = 144 # Length of day (in time steps)
-number_of_days = 10 # Number of days to simulate
+day_length = 14 # Length of day (in time steps)
+number_of_days = 1 # Number of days to simulate
 
 class MuseumModel(ap.Model):
 
@@ -32,7 +32,6 @@ class MuseumModel(ap.Model):
         self.agents = ap.AgentList(self, self.p.population, MuseumGuest)
         self.network = self.agents.network = ap.Network(self, self.museum_layout.museum_graph)
         self.network.add_agents(self.agents, self.network.nodes)
-
 
     def get_room(self, painting_number: int) -> str:
         """
@@ -56,8 +55,12 @@ class MuseumModel(ap.Model):
         self.record("wanderers", len(self.agents.select(self.agents.norm == 1)))
         self.record("linear walkers", len(self.agents.select(self.agents.norm == 0)))
         self.record("lobby", len(self.agents.select(self.agents.current_room == "lobby")))
-        self.record("gallery", len(self.agents.select(self.agents.current_room == "gallery")))
-        self.record("gallery 2", len(self.agents.select(self.agents.current_room == "gallery2")))
+        self.record("left_gallery", len(self.agents.select(self.agents.current_room == "left_gallery")))
+        self.record("right_gallery", len(self.agents.select(self.agents.current_room == "right_gallery")))
+        self.record("left_gallery1", len(self.agents.select(self.agents.current_room == "left_gallery1")))
+        self.record("left_gallery2", len(self.agents.select(self.agents.current_room == "left_gallery2")))
+        self.record("right_gallery1", len(self.agents.select(self.agents.current_room == "right_gallery1")))
+        self.record("right_gallery2", len(self.agents.select(self.agents.current_room == "right_gallery2")))
         self.record("exit", len(self.agents.select(self.agents.current_room == "exit")))
         self.record("Viewer Numbers", self.get_painting_viewers_list())
         self.record("Wanderer Numbers", self.get_wanderers_list())
@@ -167,7 +170,6 @@ class MuseumModel(ap.Model):
             self.added += 1
             self.agents += ap.AgentList(self, 1, MuseumGuest)
             self.network.add_agents(self.agents, self.network.nodes)
-
 
     def step(self) -> None:
         """ Define the models' events per simulation step. """

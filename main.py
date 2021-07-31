@@ -1,19 +1,18 @@
 """
 Main TODO:
-    1 - Add time piping into main sim - Connect it up later? - DONE
-    2 - Make new nonlinear museum layout 
-    3 - Test to make sure everything is working ok
-    4 - Add in PRISM data for wandering vs linear
-    5 - Make more complex PRISM model for wandering vs linear
-    6 - Make PRISM model for # of people up ahead
-    7 - Integrate data
+    1 - Add time piping into main sim - DONE
+    2 - Make new nonlinear museum layout -Saturday - Somewhat DONE?
+    3 - Test to make sure everything is working ok - Saturday
+    4 - Add in PRISM data for wandering vs linear - Saturday
+    5 - Make more complex PRISM model for wandering vs linear - Sunday
+    6 - Make PRISM model for # of people up ahead - Monday
+    7 - Integrate data - Tuesday
     8 - Write etc
-
 
 TODO: Maybe interesting approaches
     1 - Maybe a volume level of each room?
 """
-from models.museum_model import MuseumModel
+from models.museum_model import *
 
 if __name__ == "__main__":
 

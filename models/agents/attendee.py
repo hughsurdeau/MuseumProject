@@ -172,7 +172,3 @@ class MuseumGuest(ap.Agent):
             successor_scores.append(curr_score)
             sucessor_paintings[curr_score] = painting_option
         return (max(curr_score, 0) + max(successor_scores), sucessor_paintings[max(successor_scores)])
-
-
-
-
