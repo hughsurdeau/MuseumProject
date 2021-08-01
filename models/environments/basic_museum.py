@@ -10,7 +10,7 @@ class MuseumLayout:
 
     def __init__(self):
         self._museum_graph = nx.DiGraph()
-        rooms = ["lobby", "left_gallery", "right_gallery", "left_gallery1",
+        self.rooms = ["lobby", "left_gallery", "right_gallery", "left_gallery1",
                  "left_gallery2", "right_gallery1", "right_gallery2", "exit"]
         self.styles = {"lobby": "modern", "left_gallery": "classic", "left_gallery1": "classic","left_gallery2": "classic",
                        "right_gallery": "jazzy", "right_gallery1": "jazzy", "right_gallery2": "jazzy", "exit": "none"}

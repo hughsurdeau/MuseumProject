@@ -25,3 +25,18 @@ class TimePiper:
         sigma = mu // 2
         cdf = norm.cdf(time + 1, mu, sigma) - norm.cdf(time, mu, sigma)
         return ceil(cdf * self.people_scale)
+
+    def mean_entered_visitors(self, time, mean_stay_duration=50) -> int:
+        """
+        TODO Get the real mean stay duration from data or set it
+        Gets the mean number of visitors entering the museum in the
+        period of time the average visitor takes i.e. the expected
+        number of visitors in the whole museum at time T
+        :param time:
+        :return:
+        """
+        total_visitors = 0
+        start = max(time-mean_stay_duration, 0)
+        for i in range(start, time):
+            total_visitors += self.get_mean_visitors(i)
+        return total_visitors

@@ -183,9 +183,13 @@ class MuseumModel(ap.Model):
         """
         Returns the expected number of viewers in each room
         at the given time of day.
+
+        Expect that the lobby will have a surpluss of people
+        Perhaps ~30% of total for now (to fix)
         :return:
         """
-        return 1
+        number_of_rooms = len(self.museum_layout.rooms)
+        return self.time_piper.mean_entered_visitors(self.current_time) / number_of_rooms
 
     def get_room_surpluss_viewers(self, room: str) -> float:
         """
