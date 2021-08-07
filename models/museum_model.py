@@ -21,6 +21,7 @@ class MuseumModel(ap.Model):
         self.time_piper = TimePiper(day_length=day_length)
         self.day_length = day_length
         self.current_time = 0
+        self.prism_integration = False
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
