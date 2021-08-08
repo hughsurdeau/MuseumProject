@@ -8,6 +8,7 @@ from models.agents.attendee import *
 from models.environments.basic_museum import *
 from numpy.random import poisson
 from time_piper import TimePiper
+from prism_interpretors.basic_wanderer_interpretor import *
 
 day_length = 144 # Length of day (in time steps)
 number_of_days = 10 # Number of days to simulate
@@ -21,7 +22,7 @@ class MuseumModel(ap.Model):
         self.time_piper = TimePiper(day_length=day_length)
         self.day_length = day_length
         self.current_time = 0
-        self.prism_integration = False
+        self._prism_integration = False
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
@@ -33,6 +34,14 @@ class MuseumModel(ap.Model):
         self.agents = ap.AgentList(self, self.p.population, MuseumGuest)
         self.network = self.agents.network = ap.Network(self, self.museum_layout.museum_graph)
         self.network.add_agents(self.agents, self.network.nodes)
+
+    @property
+    def prism_integration(self):
+        return self._prism_integration
+
+    @prism_integration.setter
+    def boredom_threshold(self, new_prism_integration: bool):
+        self._prism_integration = new_prism_integration
 
     def get_room(self, painting_number: int) -> str:
         """
@@ -75,8 +84,11 @@ class MuseumModel(ap.Model):
         :return: float
             The mean norm of all agents in the room
         """
-        agent_norms = self.agents.select(self.agents.current_room == room).norm
-        return statistics.mean(agent_norms)
+        if self.prism_integration:
+            return get_wanderer_probability(w, s)
+        else:
+            agent_norms = self.agents.select(self.agents.current_room == room).norm
+            return statistics.mean(agent_norms)
 
     def get_painting_viewers_list(self) -> list:
         """
