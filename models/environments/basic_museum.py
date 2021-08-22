@@ -15,21 +15,24 @@ class MuseumLayout:
         self.styles = {"lobby": "modern", "left_gallery": "classic", "left_gallery1": "classic","left_gallery2": "classic",
                        "right_gallery": "jazzy", "right_gallery1": "jazzy", "right_gallery2": "jazzy", "exit": "none"}
 
+        self.prestiges = {"lobby": 5, "left_gallery": 8, "left_gallery1": 7,"left_gallery2": 4,
+                       "right_gallery": 4, "right_gallery1": 5, "right_gallery2": 2, "exit": "none"}
+
         self._last_painting = 70  # TODO better method
         self._first_painting = 0
 
         # Lobby
         for i in range(0, 10, 2):
-            self._museum_graph.add_node(i, room="lobby", prestige=random.uniform(0, 10))
-            self._museum_graph.add_node(i + 1, room="lobby", prestige=random.uniform(0, 10))
+            self._museum_graph.add_node(i, room="lobby", prestige=self.prestiges["lobby"])
+            self._museum_graph.add_node(i + 1, room="lobby", prestige=self.prestiges["lobby"])
             self._museum_graph.add_edge(i, i + 1)
             if i > 0:
                 self._museum_graph.add_edge(i - 1, i)
 
         # left_gallery
         for i in range(10, 20, 2):
-            self._museum_graph.add_node(i, room="left_gallery", prestige=random.uniform(0, 10))
-            self._museum_graph.add_node(i + 1, room="left_gallery", prestige=random.uniform(0, 10))
+            self._museum_graph.add_node(i, room="left_gallery", prestige=self.prestiges["left_gallery"])
+            self._museum_graph.add_node(i + 1, room="left_gallery", prestige=self.prestiges["left_gallery"])
             self._museum_graph.add_edge(i, i + 1)
             if i > 0:
                 self._museum_graph.add_edge(i - 1, i)
@@ -38,8 +41,8 @@ class MuseumLayout:
 
         # right_gallery
         for i in range(20, 30, 2):
-            self._museum_graph.add_node(i, room="right_gallery", prestige=random.uniform(0, 10))
-            self._museum_graph.add_node(i + 1, room="right_gallery", prestige=random.uniform(0, 10))
+            self._museum_graph.add_node(i, room="right_gallery", prestige=self.prestiges["right_gallery"])
+            self._museum_graph.add_node(i + 1, room="right_gallery", prestige=self.prestiges["right_gallery"])
             self._museum_graph.add_edge(i, i + 1)
             if i > 0:
                 self._museum_graph.add_edge(9, i)
@@ -48,8 +51,8 @@ class MuseumLayout:
 
         # left_gallery1
         for i in range(30, 40, 2):
-            self._museum_graph.add_node(i, room="left_gallery1", prestige=random.uniform(0, 10))
-            self._museum_graph.add_node(i + 1, room="left_gallery1", prestige=random.uniform(0, 10))
+            self._museum_graph.add_node(i, room="left_gallery1", prestige=self.prestiges["left_gallery1"])
+            self._museum_graph.add_node(i + 1, room="left_gallery1", prestige=self.prestiges["left_gallery1"])
             self._museum_graph.add_edge(i, i + 1)
             if i > 0:
                 self._museum_graph.add_edge(i - 1, i)
@@ -58,8 +61,8 @@ class MuseumLayout:
 
         # left_gallery2
         for i in range(40, 50, 2):
-            self._museum_graph.add_node(i, room="left_gallery2", prestige=random.uniform(0, 10))
-            self._museum_graph.add_node(i + 1, room="left_gallery2", prestige=random.uniform(0, 10))
+            self._museum_graph.add_node(i, room="left_gallery2", prestige=self.prestiges["left_gallery2"])
+            self._museum_graph.add_node(i + 1, room="left_gallery2", prestige=self.prestiges["left_gallery2"])
             self._museum_graph.add_edge(i, i + 1)
             if i > 0:
                 self._museum_graph.add_edge(i - 1, i)
@@ -68,8 +71,8 @@ class MuseumLayout:
 
         # right_gallery1
         for i in range(50, 60, 2):
-            self._museum_graph.add_node(i, room="right_gallery1", prestige=random.uniform(0, 10))
-            self._museum_graph.add_node(i + 1, room="right_gallery1", prestige=random.uniform(0, 10))
+            self._museum_graph.add_node(i, room="right_gallery1", prestige=self.prestiges["right_gallery1"])
+            self._museum_graph.add_node(i + 1, room="right_gallery1", prestige=self.prestiges["right_gallery1"])
             self._museum_graph.add_edge(i, i + 1)
             if i > 0:
                 self._museum_graph.add_edge(i - 1, i)
@@ -78,8 +81,8 @@ class MuseumLayout:
 
         # right_gallery2
         for i in range(60, 70, 2):
-            self._museum_graph.add_node(i, room="right_gallery2", prestige=random.uniform(0, 10))
-            self._museum_graph.add_node(i + 1, room="right_gallery2", prestige=random.uniform(0, 10))
+            self._museum_graph.add_node(i, room="right_gallery2", prestige=self.prestiges["right_gallery2"])
+            self._museum_graph.add_node(i + 1, room="right_gallery2", prestige=self.prestiges["right_gallery2"])
             self._museum_graph.add_edge(i, i + 1)
             if i > 0:
                 self._museum_graph.add_edge(i - 1, i)

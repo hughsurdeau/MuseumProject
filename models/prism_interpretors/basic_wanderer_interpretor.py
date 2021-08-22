@@ -3,8 +3,9 @@ import pandas as pd
 
 path = os.getcwd()
 top_dir = os.path.dirname(os.path.dirname(path))
+par_dir = os.path.dirname(path)
 
-prism_file = top_dir + "/data/csv/prism_data.csv"
+prism_file = par_dir + "/data/csv/prism_data.csv"
 
 
 df = pd.read_csv(prism_file)

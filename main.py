@@ -4,9 +4,9 @@ Main TODO:
     2 - Make new nonlinear museum layout -DONE?
     3 - Test to make sure everything is working ok - DONE
     3.5 - Make sure there are different versions for PRISM and not PRISM
-    4 - Add in PRISM data for wandering vs linear -
+    4 - Add in PRISM data for wandering vs linear - Done
     5 - Make more complex PRISM model for wandering vs linear - Sunday
-    5.5 - Automated PRISM shit
+    5.5 - Automated PRISM shit - Done
     6 - Make PRISM model for # of people up ahead - Monday
     7 - Integrate data - Tuesday
     8 - Write etc

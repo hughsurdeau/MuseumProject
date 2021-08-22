@@ -84,10 +84,12 @@ class MuseumModel(ap.Model):
         :return: float
             The mean norm of all agents in the room
         """
+        agent_norms = self.agents.select(self.agents.current_room == room).norm
         if self.prism_integration:
+            s = ceil(statistics.mean(agent_norms * 5))
+            w = min(ceil(self.get_room_surpluss_viewers(room)*5), 5) # x5 to fit into categories I used
             return get_wanderer_probability(w, s)
         else:
-            agent_norms = self.agents.select(self.agents.current_room == room).norm
             return statistics.mean(agent_norms)
 
     def get_painting_viewers_list(self) -> list:
