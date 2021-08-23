@@ -1,6 +1,7 @@
 from __future__ import annotations
 import agentpy as ap
 import random
+from prism_interpretors.basic_wanderer_interpretor import *
 
 class MuseumGuest(ap.Agent):
 
@@ -13,6 +14,7 @@ class MuseumGuest(ap.Agent):
         self._boredom_threshold = (random.randint(1,10)) ** -1 #Reciprocal of desired amount of time
         self.crowd_threshold = random.randint(10, 100)
         self._desire_to_leave = random.uniform(0.90, 0.99)
+        self.prism_decision_making = self.model.prism_integration
 
     def assign_initial_norm(self, seed=random.seed()):
         return int(self.model.asshole_ratio > random.uniform(0, 1))
@@ -42,6 +44,21 @@ class MuseumGuest(ap.Agent):
     def boredom_threshold(self, new_threshold):
         if (0 <= new_threshold and new_threshold <= 1):
             self._boredom_threshold = new_threshold
+
+    def get_room_crowd_ratio(self):
+        crowd_size = self.model.get_number_of_viewers(self.current_room) / 10 #10 paintings per room
+        crowd_tolerance = self.crowd_threshold
+        return (crowd_size / crowd_tolerance) ** 2
+
+    def get_prism_left_room_prob(self):
+        """
+        Returns the probability of an agent choosing the left room when deciding
+        between two pathways.
+        :return:
+        """
+        crowd_ratio = self.get_room_crowd_ratio()
+        return get_room_probability(self.current_room, crowd_ratio)
+
 
     def update_norms(self, room_mean_norm: float, seed=random.seed()) -> None:
         """
@@ -153,8 +170,15 @@ class MuseumGuest(ap.Agent):
                 return self.get_next_step(next_room, next_painting)
         if len(successors) == 0:
             return current_painting
-        score, next_painting = self.route_evaluator(current_painting)
-        return next_painting
+        if self.prism_decision_making:
+            left_prob = self.get_prism_left_room_prob()
+            if random.uniform() < left_prob:
+                return successors[0]
+            else:
+                return successors[-1]
+        else:
+            score, next_painting = self.route_evaluator(current_painting)
+            return next_painting
 
     def route_evaluator(self, painting: int) -> tuple[int, str]:
         """

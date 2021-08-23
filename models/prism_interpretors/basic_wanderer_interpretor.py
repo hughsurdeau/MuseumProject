@@ -18,6 +18,22 @@ def get_wanderer_probability(w, s):
     return val
 
 
+def binned_ratio(ratio):
+    """
+    Bins the input ratio into a preselected PRISM ratio
+    :param ratio:
+    :return:
+    """
+    if ratio < 2:
+        return round(ratio * 10) / 10
+    elif ratio < 4:
+        return (round((ratio * 10)/2) * 2) / 10
+    else:
+        return round(ratio)
+
+
 def get_room_probability(room, ratio):
+    ratio = binned_ratio(ratio)
+    room_map = {"lobby":"LobbyLeft", "left_gallery":"G1Left", "right_gallery":"G2Left"}
     val = crowd_df.loc(crowd_df['Crowd'] == ratio)[room].values[0]
     return val
