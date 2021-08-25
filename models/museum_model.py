@@ -22,7 +22,7 @@ class MuseumModel(ap.Model):
         self.time_piper = TimePiper(day_length=day_length)
         self.day_length = day_length
         self.current_time = 0
-        self._prism_integration = False
+        self._prism_integration = True
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
@@ -78,6 +78,7 @@ class MuseumModel(ap.Model):
     def room_mean_norm(self, room: str) -> float:
         """
         Returns the mean norm of all agents in a specified room
+        Note that w has to be between 1 and 4 (inclusive)
 
         :param room: str
             Name of the room to find the mean norm of
@@ -87,7 +88,7 @@ class MuseumModel(ap.Model):
         agent_norms = self.agents.select(self.agents.current_room == room).norm
         if self.prism_integration:
             s = ceil(statistics.mean(agent_norms * 5))
-            w = min(ceil(self.get_room_surpluss_viewers(room)*5), 5) # x5 to fit into categories I used
+            w = min(ceil(self.get_room_surpluss_viewers(room)*5), 4) # x5 to fit into categories I used
             return get_wanderer_probability(w, s)
         else:
             return statistics.mean(agent_norms)
@@ -192,7 +193,7 @@ class MuseumModel(ap.Model):
         :param room:
         :return:
         """
-        return len(self.agents.select(self.agents.room == room))
+        return len(self.agents.select(self.agents.current_room == room))
 
     def get_expected_viewers(self) -> int:
         """
@@ -214,8 +215,8 @@ class MuseumModel(ap.Model):
         :return:
         """
         curr_viewers = self.get_number_of_viewers(room)
-        expected_viewers = self.get_expected_viewers()
-        return (curr_viewers/expected_viewers)
+        expected_viewers = max(self.get_expected_viewers(), 1)
+        return (curr_viewers / expected_viewers)
 
 
     def step(self) -> None:
