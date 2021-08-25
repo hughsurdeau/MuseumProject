@@ -12,6 +12,11 @@ wanderer_df = pd.read_csv(wanderer_prism_file)
 crowd_df = pd.read_csv(crowd_prism_file)
 
 
+room_map = {"lobby": "LobbyLeft",
+            "left_gallery": "G1Left",
+            "right_gallery": "G2Left"}
+
+
 def get_wanderer_probability(w, s):
     wanderer_var = "Wanderer Prob (r=1)"
     val = wanderer_df.loc[(wanderer_df['W'] == w) & (wanderer_df['S'] ==s )][wanderer_var].values[0]
@@ -25,15 +30,15 @@ def binned_ratio(ratio):
     :return:
     """
     if ratio < 2:
-        return round(ratio * 10) / 10
+        return float(round(ratio * 10) / 10)
     elif ratio < 4:
-        return (round((ratio * 10)/2) * 2) / 10
+        return float((round((ratio * 10)/2) * 2) / 10)
     else:
-        return round(ratio)
+        return float(round(ratio))
 
 
 def get_room_probability(room, ratio):
     ratio = binned_ratio(ratio)
-    room_map = {"lobby":"LobbyLeft", "left_gallery":"G1Left", "right_gallery":"G2Left"}
-    val = crowd_df.loc(crowd_df['Crowd'] == ratio)[room].values[0]
+    room = room_map[room]
+    val = crowd_df.loc[(crowd_df['Crowd'] == ratio)][room].values[0]
     return val

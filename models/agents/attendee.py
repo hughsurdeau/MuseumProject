@@ -57,6 +57,7 @@ class MuseumGuest(ap.Agent):
         :return:
         """
         crowd_ratio = self.get_room_crowd_ratio()
+        print(self.current_room)
         return get_room_probability(self.current_room, crowd_ratio)
 
 
@@ -172,7 +173,7 @@ class MuseumGuest(ap.Agent):
             return current_painting
         if self.prism_decision_making:
             left_prob = self.get_prism_left_room_prob()
-            if random.uniform() < left_prob:
+            if random.uniform(0,1) < left_prob:
                 return successors[0]
             else:
                 return successors[-1]

@@ -18,7 +18,7 @@ class MuseumModel(ap.Model):
     def setup(self) -> None:
         """ Initialize the agents and network of the model. """
         self.museum_layout = MuseumLayout()
-        self.asshole_ratio = 0.45 #Fraction of fellas who are assholes
+        self.asshole_ratio = 0.9 #Fraction of fellas who are assholes
         self.time_piper = TimePiper(day_length=day_length)
         self.day_length = day_length
         self.current_time = 0
@@ -250,5 +250,5 @@ if __name__ == "__main__":
     results = model.run()
     print(results.variables.MuseumModel)
     curr_time = str(datetime.datetime.now())
-    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/linear_museum_45AT.csv"
+    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/prism_museum_90AT.csv"
     results.variables.MuseumModel.to_csv(file_path)
