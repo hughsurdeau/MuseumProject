@@ -92,31 +92,6 @@ class MuseumLayout:
         self._museum_graph.add_node(70, room="exit", prestige=random.uniform(0, 10))
         self._museum_graph.add_edge(69, 70)
 
-        """
-        ############## OLD
-        div = ceil(80 / len(rooms))
-        for i in range(0, 80, 2):
-            self._museum_graph.add_node(i, room=rooms[i // div], prestige=random.uniform(0, 10))
-            self._museum_graph.add_node(i + 1, room=rooms[(i + 1) // div], prestige=random.uniform(0, 10))
-            self._museum_graph.add_edge(i, i + 1)
-            if i > 0:
-                self._museum_graph.add_edge(i - 1, i)
-        
-        rooms = ["lobby", "gallery", "gallery2", "exit"]
-        self.styles = {"lobby":"modern", "gallery":"classic",
-                       "gallery2":"jazzy", "exit":"none"}
-        self._last_painting = 9 #TODO better method
-        self._first_painting = 0
-
-        div = ceil(10 / len(rooms))
-        for i in range(0, 10, 2):
-            self._museum_graph.add_node(i, room=rooms[i // div], prestige=random.uniform(0, 10))
-            self._museum_graph.add_node(i + 1, room=rooms[(i + 1) // div], prestige=random.uniform(0, 10))
-            self._museum_graph.add_edge(i, i + 1)
-            if i > 0:
-                self._museum_graph.add_edge(i - 1, i)
-        """
-
     @property
     def last_painting(self):
         return self._last_painting
@@ -184,10 +159,4 @@ class MuseumLayout:
             List of all successor paintings
         """
         return list(self._museum_graph.successors(painting_number))
-
-
-
-
-
-
 

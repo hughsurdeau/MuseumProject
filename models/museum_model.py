@@ -10,19 +10,21 @@ from numpy.random import poisson
 from time_piper import TimePiper
 from prism_interpretors.basic_wanderer_interpretor import *
 
-day_length = 144 # Length of day (in time steps)
-number_of_days = 10 # Number of days to simulate
+day_length = 1000 # Length of day (in time steps)
+number_of_days = 1 # Number of days to simulate
 
 class MuseumModel(ap.Model):
 
     def setup(self) -> None:
         """ Initialize the agents and network of the model. """
         self.museum_layout = MuseumLayout()
-        self.asshole_ratio = 0.9 #Fraction of fellas who are assholes
+        self.asshole_ratio = 0.0 #Fraction of fellas who are assholes
         self.time_piper = TimePiper(day_length=day_length)
         self.day_length = day_length
         self.current_time = 0
-        self._prism_integration = True
+        self.wandering_cost = 2
+        self.wandering_reward = 4 # Mean prestige of museum paintings i.e. expected reward
+        self._prism_integration = False
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
@@ -87,8 +89,8 @@ class MuseumModel(ap.Model):
         """
         agent_norms = self.agents.select(self.agents.current_room == room).norm
         if self.prism_integration:
-            s = ceil(statistics.mean(agent_norms * 5))
-            w = min(ceil(self.get_room_surpluss_viewers(room)*5), 4) # x5 to fit into categories I used
+            s = ceil(statistics.mean(agent_norms * 2))
+            w = max(min(ceil(self.get_room_surpluss_viewers(room)*2), 4), 1) # x5 to fit into categories I used
             return get_wanderer_probability(w, s)
         else:
             return statistics.mean(agent_norms)
@@ -250,5 +252,5 @@ if __name__ == "__main__":
     results = model.run()
     print(results.variables.MuseumModel)
     curr_time = str(datetime.datetime.now())
-    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/prism_museum_90AT.csv"
+    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/test.csv"
     results.variables.MuseumModel.to_csv(file_path)

@@ -8,16 +8,22 @@ class MuseumGuest(ap.Agent):
     def setup(self):
         """ Initialize a new variable at agent creation. """
         self.norm = self.assign_initial_norm() #Linear = 0, wandering = 1
+        self.internalised_norm = self.norm #Linear = 0, wandering = 1
         self._current_room = self.model.start_room
         self.current_painting = self.model.first_painting
         self.preference = "classic"
-        self._boredom_threshold = (random.randint(1,10)) ** -1 #Reciprocal of desired amount of time
-        self.crowd_threshold = random.randint(10, 100)
-        self._desire_to_leave = random.uniform(0.90, 0.99)
+        self._boredom_threshold = (random.uniform(0,0.6)) #Reciprocal of desired amount of time
+        self.crowd_threshold = random.randint(1, 15) #Crowd tolerance
+        self._desire_to_leave = random.uniform(0.98, 0.99)
         self.prism_decision_making = self.model.prism_integration
+        self.adhering_reward = random.uniform(0, 8) #Reward an agent gets from adhering to the norm
+        self.volume_norm = self.assign_initial_volume() # 0=Silent, 1=Quiet talking, 2=Loud talking
 
     def assign_initial_norm(self, seed=random.seed()):
         return int(self.model.asshole_ratio > random.uniform(0, 1))
+
+    def assign_initial_volume(self, seed=random.seed()):
+        return random.randint(0, 2)
 
     @property
     def desire_to_leave(self):
@@ -58,6 +64,7 @@ class MuseumGuest(ap.Agent):
         """
         crowd_ratio = self.get_room_crowd_ratio()
         print(self.current_room)
+        print(self.current_room, crowd_ratio)
         return get_room_probability(self.current_room, crowd_ratio)
 
 
@@ -71,7 +78,7 @@ class MuseumGuest(ap.Agent):
         """
         if self.current_room != "exit":
             seed = random.uniform(0, 1)
-            self.norm = int(seed < room_mean_norm)
+            self.internalised_norm = int(seed < room_mean_norm)
 
     def check_if_bored(self, seed=random.seed()) -> bool:
         """
@@ -95,6 +102,7 @@ class MuseumGuest(ap.Agent):
         """
         Updates the agent's location
         """
+        self.normative_decision_making()  # Update acting norm
         if self.check_if_bored():
             if self.norm == 0:
                 self.current_room, self.current_painting = self.linear_move()
@@ -102,7 +110,7 @@ class MuseumGuest(ap.Agent):
                 self.current_room, self.current_painting = self.wander_move(seed)
 
         room_norm = self.model.room_mean_norm(self.current_room)
-        self.update_norms(room_norm)
+        self.update_norms(room_norm) #Update internalised norm
 
     def wander_move(self, seed=random.seed()) -> tuple[str, int]:
         """
@@ -146,6 +154,18 @@ class MuseumGuest(ap.Agent):
         score += (self.crowd_threshold - crowd_size)
         return score
 
+    def normative_decision_making(self):
+        """
+        Agent decides on movement mode based on internalised norms + circumstances
+
+        :return:
+        """
+        adhering_score = self.internalised_norm * (self.model.wandering_reward - self.model.wandering_cost) + self.adhering_reward
+        breaking_score = (1 - self.internalised_norm) * (self.model.wandering_reward - self.model.wandering_cost)
+        if breaking_score >= adhering_score:
+            self.norm = (1 - self.internalised_norm) # Flips norm
+
+
     def get_next_step(self, current_room: str, current_painting: int) -> int:
         """
         Returns the next acceptable painting for the agent. Covers three cases:
@@ -166,7 +186,7 @@ class MuseumGuest(ap.Agent):
         if len(successors) == 1: #when there is only 1 neighbour
             next_room, next_painting = self.model.get_next_painting(current_room, current_painting)
             if self.get_painting_enjoyment(next_painting) > 0:
-                return current_painting #TODO should this be changed to next painting?
+                return next_painting #TODO should this be changed to next painting?
             else:
                 return self.get_next_step(next_room, next_painting)
         if len(successors) == 0:

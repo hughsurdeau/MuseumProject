@@ -34,7 +34,7 @@ def binned_ratio(ratio):
     elif ratio < 4:
         return float((round((ratio * 10)/2) * 2) / 10)
     else:
-        return float(round(ratio))
+        return min(float(round(ratio)), 10)
 
 
 def get_room_probability(room, ratio):
