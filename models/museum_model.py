@@ -11,26 +11,27 @@ from time_piper import TimePiper
 from prism_interpretors.basic_wanderer_interpretor import *
 
 day_length = 1000 # Length of day (in time steps)
-number_of_days = 1 # Number of days to simulate
+number_of_days = 1 # Number of days to simulates
 
 class MuseumModel(ap.Model):
 
     def setup(self) -> None:
         """ Initialize the agents and network of the model. """
         self.museum_layout = MuseumLayout()
-        self.asshole_ratio = 0.0 #Fraction of fellas who are assholes
+        self.asshole_ratio = 0.1 #Fraction of fellas who are assholes
         self.time_piper = TimePiper(day_length=day_length)
         self.day_length = day_length
         self.current_time = 0
         self.wandering_cost = 2
         self.wandering_reward = 4 # Mean prestige of museum paintings i.e. expected reward
-        self._prism_integration = False
+        self._prism_integration = True
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
         self.last_painting = self.museum_layout.last_painting
         self.added = 0
         self.removed = 0
+        self.total_removed = 0
 
         # Create agents and network
         self.agents = ap.AgentList(self, self.p.population, MuseumGuest)
@@ -74,6 +75,9 @@ class MuseumModel(ap.Model):
         self.record("right_gallery1", len(self.agents.select(self.agents.current_room == "right_gallery1")))
         self.record("right_gallery2", len(self.agents.select(self.agents.current_room == "right_gallery2")))
         self.record("exit", len(self.agents.select(self.agents.current_room == "exit")))
+        self.record("removed", self.removed)
+        self.record("total_removed", self.total_removed)
+        self.record("total_added", self.added)
         self.record("Viewer Numbers", self.get_painting_viewers_list())
         self.record("Wanderer Numbers", self.get_wanderers_list())
 
@@ -173,8 +177,10 @@ class MuseumModel(ap.Model):
         """
         Removes all agents at the exit
         """
+        self.removed = 0
         for agent in self.agents.select(self.agents.current_room == "exit"):
             self.removed += 1
+            self.total_removed += 1
             self.agents.remove(agent)
 
     def add_new_agents(self) -> None:
@@ -252,5 +258,5 @@ if __name__ == "__main__":
     results = model.run()
     print(results.variables.MuseumModel)
     curr_time = str(datetime.datetime.now())
-    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/test.csv"
+    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/prism_museum_10AT_fat.csv"
     results.variables.MuseumModel.to_csv(file_path)
