@@ -1,8 +1,0 @@
-const int x;
-
-label "end" = LobbyFinalScore>0;
-
-Pmin=? [ F "end"&LobbyFinalScore=x ]
-
-Pmax=? [ F "end"&LobbyFinalScore=x ]
-

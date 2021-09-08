@@ -1,0 +1,103 @@
+dtmc
+
+//Constants
+//Downstream mean prestige left
+const int leftDownstreamPrestige = 10;
+//Downstream mean prestige right
+const int rightDownstreamPrestige = 10;
+//Number of people in current room
+const int currentRoomPopulation = 10;
+//Expected number of people in current room
+const int expectedRoomPopulation = 10;
+//Discount factor
+const double discount = 0.9;
+const double squared_room_ratio = 10;
+
+//Prestige scores
+const int LobbyScore = 5;
+const int G1Score = 8;
+const int G2Score = 4;
+const int G3Score = 7;
+const int G4Score = 4;
+const int G5Score = 5;
+const int G6Score = 2;
+
+
+//Probs
+const double pLobbyOver = 1 - 1/ (1 + LobbyScore*squared_room_ratio);
+const double pG1Over = 1 - 1/ (1 + G1Score*squared_room_ratio);
+const double pG2Over = 1 - 1/ (1 + G2Score*squared_room_ratio);
+const double pG3Over = 1 - 1/ (1 + G3Score*squared_room_ratio);
+const double pG4Over = 1 - 1/ (1 + G4Score*squared_room_ratio);
+const double pG5Over = 1 - 1/ (1 + G5Score*squared_room_ratio);
+const double pG6Over = 1 - 1/ (1 + G6Score*squared_room_ratio);
+
+
+
+// formulae 
+
+module Lobby
+	
+	//Overpopulated room. 1=no, 2 = yes
+	LobbyOverPopulated : [0..2] init 0;
+	LobbyFinalScore : [0..9] init 0;
+	LobbyLeft : bool init true;
+
+	[] LobbyOverPopulated = 0 -> pLobbyOver : (LobbyOverPopulated'=2) + (1-pLobbyOver) : (LobbyOverPopulated'=1);
+	
+
+	[] LobbyOverPopulated = 1 & LobbyFinalScore=0 -> (LobbyFinalScore'=LobbyScore);
+	[] LobbyOverPopulated = 2 & LobbyFinalScore=0 -> (LobbyFinalScore'=1);
+
+	[] LobbyLeft = true & LobbyFinalScore=0 -> (LobbyLeft' = (G1FinalScore + max(G3FinalScore, G4FinalScore) > G2FinalScore + max(G5FinalScore, G6FinalScore) ));
+
+
+endmodule
+
+module Gallery1
+	
+	//Overpopulated room. 1=no, 2 = yes
+	G1Overpopulated : [0..2] init 0;
+	G1FinalScore : [0..9] init 0;
+	Gallery1Left : bool init true;
+
+	[] G1Overpopulated = 0 -> pG1Over : (G1Overpopulated'=2) + (1-pG1Over) : (G1Overpopulated'=1);
+	
+
+	[] G1Overpopulated = 1 & G1FinalScore=0 -> (G1FinalScore'=G1Score);
+	[] G1Overpopulated = 2 & G1FinalScore=0 -> (G1FinalScore'=1);
+
+	[] Gallery1Left = true & G1FinalScore=0 -> (Gallery1Left' = (G3FinalScore > G4FinalScore));
+
+
+endmodule
+
+
+module Gallery2
+	
+	//Overpopulated room. 1=no, 2 = yes
+	G2Overpopulated : [0..2] init 0;
+	G2FinalScore : [0..9] init 0;
+	Gallery2Left : bool init true;
+
+	[] G2Overpopulated = 0 -> pG2Over : (G2Overpopulated'=2) + (1-pG2Over) : (G2Overpopulated'=1);
+	
+
+	[] G2Overpopulated = 1 & G2FinalScore=0 -> (G2FinalScore'=G2Score);
+	[] G2Overpopulated = 2 & G2FinalScore=0 -> (G2FinalScore'=1);
+
+	[] Gallery2Left = true & G2FinalScore=0 -> (Gallery2Left' = (G5FinalScore > G6FinalScore));
+
+
+endmodule
+
+
+
+
+
+
+module Gallery3 = Lobby [ pLobbyOver=pG3Over, LobbyScore=G3Score, LobbyOverPopulated=G3Overpopulated, LobbyFinalScore=G3FinalScore, LobbyLeft=Gallery3Left ] endmodule
+module Gallery4 = Lobby [ pLobbyOver=pG4Over, LobbyScore=G4Score, LobbyOverPopulated=G4Overpopulated, LobbyFinalScore=G4FinalScore, LobbyLeft=Gallery4Left ] endmodule
+module Gallery5 = Lobby [ pLobbyOver=pG5Over, LobbyScore=G5Score, LobbyOverPopulated=G5Overpopulated, LobbyFinalScore=G5FinalScore, LobbyLeft=Gallery5Left ] endmodule
+module Gallery6 = Lobby [ pLobbyOver=pG6Over, LobbyScore=G6Score, LobbyOverPopulated=G6Overpopulated, LobbyFinalScore=G6FinalScore, LobbyLeft=Gallery6Left ] endmodule
+

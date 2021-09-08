@@ -1,0 +1,12 @@
+const bool x=true;
+
+label "end" = LobbyFinalScore>0;
+
+P=? [ F "end"&LobbyLeft=x ]
+
+
+P=? [ F "end"&Gallery1Left=x ]
+
+
+
+P=? [ F "end"&Gallery2Left=x ]
