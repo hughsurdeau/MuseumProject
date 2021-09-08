@@ -1,5 +1,9 @@
 from models.museum_model import *
 
+prism_integration = False
+wanderer_threshold = 0.5
+
+
 if __name__ == "__main__":
 
     parameters = {
@@ -9,6 +13,7 @@ if __name__ == "__main__":
 
     file_path = par_dir + "/data/csv/test.csv"
     model = MuseumModel(parameters)
+    model.setup(prism_integration, wanderer_threshold)
     results = model.run()
     print(results.variables.MuseumModel)
     curr_time = str(datetime.datetime.now())
