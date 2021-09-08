@@ -7,8 +7,8 @@ import datetime
 from models.agents.attendee import *
 from models.environments.basic_museum import *
 from numpy.random import poisson
-from time_piper import TimePiper
-from prism_interpretors.basic_wanderer_interpretor import *
+from models.time_piper import TimePiper
+from models.prism_interpretors.basic_wanderer_interpretor import *
 
 day_length = 1000 # Length of day (in time steps)
 number_of_days = 1 # Number of days to simulates
@@ -254,9 +254,10 @@ if __name__ == "__main__":
         'steps': day_length * number_of_days,
     }
 
+    file_path = par_dir + "/data/csv/test.csv"
+    print(file_path)
     model = MuseumModel(parameters)
     results = model.run()
     print(results.variables.MuseumModel)
     curr_time = str(datetime.datetime.now())
-    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/test.csv"
     results.variables.MuseumModel.to_csv(file_path)

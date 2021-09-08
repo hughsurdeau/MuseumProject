@@ -6,8 +6,8 @@ path = os.getcwd()
 top_dir = os.path.dirname(os.path.dirname(path))
 par_dir = os.path.dirname(path)
 
-wanderer_prism_file = par_dir + "/data/csv/prism_data.csv"
-crowd_prism_file = par_dir + "/data/csv/crowd_size.csv"
+wanderer_prism_file = path + "/data/csv/prism_data.csv"
+crowd_prism_file = path + "/data/csv/crowd_size.csv"
 
 wanderer_df = pd.read_csv(wanderer_prism_file)
 crowd_df = pd.read_csv(crowd_prism_file)

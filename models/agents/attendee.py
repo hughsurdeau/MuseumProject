@@ -1,7 +1,7 @@
 from __future__ import annotations
 import agentpy as ap
 import random
-from prism_interpretors.basic_wanderer_interpretor import *
+from models.prism_interpretors.basic_wanderer_interpretor import *
 
 class MuseumGuest(ap.Agent):
 
