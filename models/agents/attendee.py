@@ -68,8 +68,6 @@ class MuseumGuest(ap.Agent):
         :return:
         """
         crowd_ratio = self.get_room_crowd_ratio()
-        print(self.current_room)
-        print(self.current_room, crowd_ratio)
         return get_room_probability(self.current_room, crowd_ratio)
 
 

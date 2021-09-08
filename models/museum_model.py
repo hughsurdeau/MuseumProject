@@ -24,7 +24,7 @@ class MuseumModel(ap.Model):
         self.current_time = 0
         self.wandering_cost = 2
         self.wandering_reward = 4 # Mean prestige of museum paintings i.e. expected reward
-        self._prism_integration = False
+        self._prism_integration = True
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
@@ -246,18 +246,3 @@ class MuseumModel(ap.Model):
 
         # Record final evaluation measures
         pass
-
-if __name__ == "__main__":
-
-    parameters = {
-        'population': 20,
-        'steps': day_length * number_of_days,
-    }
-
-    file_path = par_dir + "/data/csv/test.csv"
-    print(file_path)
-    model = MuseumModel(parameters)
-    results = model.run()
-    print(results.variables.MuseumModel)
-    curr_time = str(datetime.datetime.now())
-    results.variables.MuseumModel.to_csv(file_path)
