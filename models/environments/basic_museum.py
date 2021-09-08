@@ -12,8 +12,8 @@ class MuseumLayout:
         self._museum_graph = nx.DiGraph()
         self.rooms = ["lobby", "left_gallery", "right_gallery", "left_gallery1",
                  "left_gallery2", "right_gallery1", "right_gallery2", "exit"]
-        self.styles = {"lobby": "modern", "left_gallery": "classic", "left_gallery1": "classic","left_gallery2": "classic",
-                       "right_gallery": "jazzy", "right_gallery1": "jazzy", "right_gallery2": "jazzy", "exit": "none"}
+        self.styles = {"lobby": "modern", "left_gallery": "classic", "left_gallery1": "modern","left_gallery2": "romantic",
+                       "right_gallery": "abstract", "right_gallery1": "abstract", "right_gallery2": "sculpture", "exit": "none"}
 
         self.prestiges = {"lobby": 5, "left_gallery": 8, "left_gallery1": 7,"left_gallery2": 4,
                        "right_gallery": 4, "right_gallery1": 5, "right_gallery2": 2, "exit": "none"}

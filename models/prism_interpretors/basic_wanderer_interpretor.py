@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 
 path = os.getcwd()
 top_dir = os.path.dirname(os.path.dirname(path))
@@ -42,3 +43,12 @@ def get_room_probability(room, ratio):
     room = room_map[room]
     val = crowd_df.loc[(crowd_df['Crowd'] == ratio)][room].values[0]
     return val
+
+
+def guassian_dist(mean, dev, min_val, max_val):
+    num = np.random.normal(mean, dev)
+    num = round(num)
+    num = max(min_val, num)
+    num = min(max_val, num)
+    return num
+

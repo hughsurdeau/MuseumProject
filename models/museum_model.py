@@ -24,7 +24,7 @@ class MuseumModel(ap.Model):
         self.current_time = 0
         self.wandering_cost = 2
         self.wandering_reward = 4 # Mean prestige of museum paintings i.e. expected reward
-        self._prism_integration = True
+        self._prism_integration = False
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
@@ -258,5 +258,5 @@ if __name__ == "__main__":
     results = model.run()
     print(results.variables.MuseumModel)
     curr_time = str(datetime.datetime.now())
-    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/prism_museum_10AT_fat.csv"
+    file_path = "/Users/hughsurdeau/PycharmProjects/MuseumProject/data/csv/test.csv"
     results.variables.MuseumModel.to_csv(file_path)

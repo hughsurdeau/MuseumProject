@@ -11,10 +11,10 @@ class MuseumGuest(ap.Agent):
         self.internalised_norm = self.norm #Linear = 0, wandering = 1
         self._current_room = self.model.start_room
         self.current_painting = self.model.first_painting
-        self.preference = "classic"
-        self._boredom_threshold = (random.uniform(0,0.6)) #Reciprocal of desired amount of time
+        self.assign_style_preference(["classic", "abstract", "modern", "romantic", "sculpture"])
+        self._boredom_threshold = guassian_dist(8, 2, 2, 12) ** -1 #Reciprocal of desired amount of time
         self.crowd_threshold = random.randint(1, 15) #Crowd tolerance
-        self._desire_to_leave = random.uniform(0.98, 0.99)
+        self._desire_to_leave = guassian_dist(250, 25, 100, 400)
         self.prism_decision_making = self.model.prism_integration
         self.adhering_reward = random.uniform(0, 8) #Reward an agent gets from adhering to the norm
         self.volume_norm = self.assign_initial_volume() # 0=Silent, 1=Quiet talking, 2=Loud talking
@@ -24,6 +24,11 @@ class MuseumGuest(ap.Agent):
 
     def assign_initial_volume(self, seed=random.seed()):
         return random.randint(0, 2)
+
+    def assign_style_preference(self, style_options):
+        self.preference = random.choice(style_options)
+        style_options.remove(self.preference)
+        self.dislike = random.choice(style_options)
 
     @property
     def desire_to_leave(self):
@@ -121,9 +126,12 @@ class MuseumGuest(ap.Agent):
         if self.check_if_wants_to_leave():
             self.norm = 0
             return self.model.get_last_painting()
-        room, painting = self.model.get_random_painting()
-        while self.model.get_number_of_painting_viewers(painting) > self.crowd_threshold:
-            room, painting = self.model.get_random_painting()
+        possible_paintings = [self.model.get_random_painting() for i in range(3)] #Choose from 3 paintings
+        curr_score = -99 #Low score to ensure at least one painting will beat it
+        for curr_room, curr_painting in possible_paintings:
+            if self.get_painting_enjoyment(curr_painting) > curr_score:
+                curr_score = self.get_painting_enjoyment(curr_painting)
+                room, painting = curr_room, curr_painting
         return (room, painting)
 
     def linear_move(self) -> tuple[str, int]:
@@ -150,6 +158,7 @@ class MuseumGuest(ap.Agent):
         crowd_size = self.model.get_number_of_painting_viewers(painting)
 
         score = 5 if style == self.preference else 0
+        score -= -5 * (style == self.dislike)
         score += prestige
         score += (self.crowd_threshold - crowd_size)
         return score
