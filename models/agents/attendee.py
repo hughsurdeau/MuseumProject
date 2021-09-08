@@ -20,7 +20,7 @@ class MuseumGuest(ap.Agent):
         self.volume_norm = self.assign_initial_volume() # 0=Silent, 1=Quiet talking, 2=Loud talking
 
     def assign_initial_norm(self, seed=random.seed()):
-        return int(self.model.asshole_ratio > random.uniform(0, 1))
+        return int(self.model.wanderer_ratio > random.uniform(0, 1))
 
     def assign_initial_volume(self, seed=random.seed()):
         return random.randint(0, 2)

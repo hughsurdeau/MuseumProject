@@ -15,16 +15,17 @@ number_of_days = 1 # Number of days to simulates
 
 class MuseumModel(ap.Model):
 
-    def setup(self, prism_integrated=False, wanderer_ratio=0.5) -> None:
+    def setup(self, prism_integrated=False, wanderer_ratio=0.5, day_length=1000, number_of_days=1) -> None:
         """ Initialize the agents and network of the model. """
         self.museum_layout = MuseumLayout()
-        self.asshole_ratio = wanderer_ratio #Fraction of fellas who are assholes
+        self.wanderer_ratio = wanderer_ratio #Fraction of agents who are wanderers
         self.time_piper = TimePiper(day_length=day_length)
         self.day_length = day_length
         self.current_time = 0
         self.wandering_cost = 2
         self.wandering_reward = 4 # Mean prestige of museum paintings i.e. expected reward
         self._prism_integration = prism_integrated
+        self.number_of_days = number_of_days
 
         self.first_painting = self.museum_layout.first_painting
         self.start_room = self.get_room(self.first_painting)
